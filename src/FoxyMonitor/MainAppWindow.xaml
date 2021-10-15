@@ -11,7 +11,7 @@
     xmlns:splot="clr-namespace:SplotControl;assembly=SplotControl"
     xmlns:props="clr-namespace:FoxyMonitor.Properties"
     d:DataContext="{d:DesignInstance Type=viewmodels:AppViewModel}"
-    x:Name="metroWindow" x:Class="FoxyMonitor.MainWindow"
+    x:Name="metroWindow" x:Class="FoxyMonitor.MainAppWindow"
     mc:Ignorable="d"
     GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
     ResizeMode="CanResizeWithGrip"
@@ -148,13 +148,21 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="6,6,6,6">
-            <StackPanel Orientation="Horizontal">
-                <ContentControl d:DataContext="{d:DesignInstance Type=models:Account}" Template="{Binding SelectedAccount.PoolName, Converter={StaticResource PoolNameToGlyph}}" Height="32" HorizontalAlignment="Left" />
-                <TextBlock Text="{Binding SelectedPostPoolInfo.PoolName}" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="20" />
-                <TextBlock Text="{Binding SelectedAccount.DisplayName}" Margin="13,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="18" Foreground="{DynamicResource Theme.ShowcaseBrush}" />
-            </StackPanel>
-        </StackPanel>
+        <Grid Grid.Row="0" Margin="6,6,6,6">
+            <DockPanel HorizontalAlignment="Stretch">
+                <ContentControl DockPanel.Dock="Left" d:DataContext="{d:DesignInstance Type=models:Account}" Template="{Binding SelectedAccount.PoolName, Converter={StaticResource PoolNameToGlyph}}" Height="32" HorizontalAlignment="Left" />
+                <TextBlock DockPanel.Dock="Left" Text="{Binding SelectedPostPoolInfo.PoolName}" Margin="6,0,0,0" VerticalAlignment="Center" FontSize="20" />
+                <Grid DockPanel.Dock="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                  
+                    <TextBlock x:Name="DisplayNameTextBlock" Grid.Column="0" Text="{Binding SelectedAccount.DisplayName}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="18" Margin="0,0,6,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding SelectedAccount.LauncherId}" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAccount.LauncherId}" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="12" Width="{Binding ActualWidth, ElementName=DisplayNameTextBlock, Mode=OneWay}" />
+                </Grid>
+            </DockPanel>
+        </Grid>
 
         <WrapPanel Grid.Row="1" Orientation="Horizontal">
             <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="{x:Static props:Resources.PendingBalanceText}">

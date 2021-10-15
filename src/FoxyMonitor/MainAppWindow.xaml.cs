@@ -16,15 +16,12 @@ using System.Windows.Navigation;
 
 namespace FoxyMonitor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainAppWindow : MetroWindow
     {
-        internal readonly ILogger<MainWindow> Logger;
+        internal readonly ILogger<MainAppWindow> Logger;
         internal readonly AppViewModel MainAppViewModel;
 
-        public MainWindow(AppViewModel appViewModel, ILogger<MainWindow> logger)
+        public MainAppWindow(AppViewModel appViewModel, ILogger<MainAppWindow> logger)
         {
             Logger = logger;
             MainAppViewModel = appViewModel;

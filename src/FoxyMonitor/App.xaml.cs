@@ -66,7 +66,7 @@ namespace FoxyMonitor
                     services.AddHostedService<AccountUpdaterService>();
                     services.AddHostedService<PoolInfoUpdaterService>();
                     services.AddSingleton<AppViewModel>();
-                    services.AddSingleton<MainWindow>();
+                    services.AddSingleton<MainAppWindow>();
                 })
                 .Build();
         }
@@ -81,7 +81,7 @@ namespace FoxyMonitor
 
             base.OnStartup(e);
 
-            var mainWindow = Host_Builder.Services.GetService<MainWindow>();
+            var mainWindow = Host_Builder.Services.GetService<MainAppWindow>();
             mainWindow.Show();
         }
 
@@ -150,7 +150,12 @@ namespace FoxyMonitor
                         // wait for our event to get fired
                         while (_appEventWaitHandle != null && !_appEventWaitHandle.SafeWaitHandle.IsClosed && _appEventWaitHandle.WaitOne())
                         {
-                            _ = Dispatcher.BeginInvoke(() => ((MainWindow)MainWindow).BringToForeground());
+                            _ = Dispatcher.BeginInvoke(new Action(() =>
+                              {
+                                  var mainAppWindow = (MainAppWindow)MainWindow;
+                                  mainAppWindow.BringToForeground();
+
+                            }));
                         }
                     }
                     catch

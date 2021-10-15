@@ -18,7 +18,7 @@ namespace FoxyMonitor.Controls
     /// </summary>
     public partial class AddAccountControl : UserControl
     {
-        private MainWindow ParentWindow;
+        private MainAppWindow ParentWindow;
 
         public AddAccountControl()
         {
@@ -244,7 +244,7 @@ namespace FoxyMonitor.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ParentWindow = (MainWindow)Window.GetWindow(this);
+            ParentWindow = (MainAppWindow)Window.GetWindow(this);
         }
     }
 }

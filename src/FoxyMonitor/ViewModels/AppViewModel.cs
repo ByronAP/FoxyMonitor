@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using static MoreLinq.Extensions.DistinctByExtension;
 
 namespace FoxyMonitor.ViewModels
 {
@@ -104,7 +105,7 @@ namespace FoxyMonitor.ViewModels
                 var seriesValues = new ObservableCollection<DateTimeDataPoint>();
 
                 var startDT = DateTimeOffset.UtcNow.AddDays(-1);
-                foreach (var point in SelectedAccount.PostAccountHistoricalDbItems.Where(x => x.CreatedAt.CompareTo(startDT.DateTime) > 0).DistinctBy(x => x.CreatedAt).OrderBy(x => x.CreatedAt))
+                foreach (var point in SelectedAccount.PostAccountHistoricalDbItems.Where(x => x.CreatedAt.CompareTo(startDT.DateTime) > 0).ToArray().DistinctBy(x => x.CreatedAt).OrderBy(x => x.CreatedAt))
                 {
                     seriesValues.Add(new DateTimeDataPoint { DTOffset = point.CreatedAt, Value = (uint)point.EstCapacity });
                 }
@@ -168,26 +169,26 @@ namespace FoxyMonitor.ViewModels
         public void ReloadPostPoolsFromDb()
         {
             var pools = FmDbContext.PostPools.Where(x => x.Id >= 0).ToArray();
-            Array.Clear(pools);
+            Array.Clear(pools, 0, pools.Length);
         }
 
         public void ReloadAccountsFromDb()
         {
             var accounts = FmDbContext.Accounts.Where(x => x.Id >= 0).ToArray();
-            Array.Clear(accounts);
+            Array.Clear(accounts, 0, accounts.Length);
         }
 
         public void ReloadAlertsFromDb()
         {
             var alerts = FmDbContext.Alerts.Where(x => x.Id >= 0).ToArray();
-            Array.Clear(alerts);
+            Array.Clear(alerts, 0, alerts.Length);
         }
 
         public void ReloadHistoricalFromDb()
         {
             var startDT = DateTimeOffset.UtcNow.AddDays(-1);
             var historical = FmDbContext.PostAccountHistoricalDbItems.Where(x => x.CreatedAt.CompareTo(startDT) > 0).ToArray();
-            Array.Clear(historical);
+            Array.Clear(historical, 0, historical.Length);
         }
 
         protected virtual void Dispose(bool disposing)
