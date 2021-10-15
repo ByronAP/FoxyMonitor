@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31612.314
-MinimumVisualStudioVersion = 17.0.31612.314
+# Visual Studio Version 16
+VisualStudioVersion = 16
+MinimumVisualStudioVersion = 16.0.28729.10
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoxyMonitor", "FoxyMonitor\FoxyMonitor.csproj", "{C5D28CE9-AE78-46B6-900A-B9433BBBDFE1}"
 EndProject
 Global
