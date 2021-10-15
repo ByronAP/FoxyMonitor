@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="FoxyMonitor.Controls.SelectThemeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:models="clr-namespace:FoxyMonitor.Data.Models"
+             xmlns:fpapi="clr-namespace:FoxyPoolApi;assembly=FoxyPoolApi"
+             xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             xmlns:local="clr-namespace:FoxyMonitor.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="ThemeModeDataSource"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:ThemeMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ThemeColorDataSource"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:ThemeColor" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+            <TextBlock Text="Theme Mode" Width="80" VerticalAlignment="Center" />
+            <Border Grid.Column="1" BorderThickness="2" CornerRadius="2" Margin="2,0,2,0">
+                <mah:SplitButton x:Name="ThemeMode_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeModeDataSource}}" SelectedIndex="0" Padding="4" Margin="2,0,2,0" MinWidth="100" SelectionChanged="ThemeMode_SplitButton_SelectionChanged" />
+                <Border.BorderBrush>
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="1,0">
+                        <GradientStop Color="Transparent" Offset="0"/>
+                        <GradientStop Color="Transparent" Offset="0.75"/>
+                        <GradientStop Color="{DynamicResource MahApps.Colors.Accent}" Offset="0.75"/>
+                        <GradientStop Color="{DynamicResource MahApps.Colors.Accent}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+            </Border>
+            <TextBlock Text="Theme Color" VerticalAlignment="Center" Margin="16,0,8,0" />
+        <Border Grid.Column="1" BorderThickness="2" CornerRadius="2" Margin="2,0,2,0">
+            <mah:SplitButton x:Name="ThemeColor_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeColorDataSource}}" SelectedIndex="2" Padding="4" Margin="2,0,2,0" MinWidth="110" SelectionChanged="ThemeColor_SplitButton_SelectionChanged" IsEnabled="False" />
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="1,1" StartPoint="1,0">
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="Transparent" Offset="0.75"/>
+                    <GradientStop Color="{DynamicResource MahApps.Colors.Accent}" Offset="0.75"/>
+                    <GradientStop Color="{DynamicResource MahApps.Colors.Accent}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+    </StackPanel>
+</UserControl>

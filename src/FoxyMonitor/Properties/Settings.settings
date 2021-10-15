@@ -23,5 +23,11 @@
     <Setting Name="ThemeColor" Type="FoxyMonitor.Data.Models.ThemeColor" Scope="User">
       <Value Profile="(Default)">Blue</Value>
     </Setting>
+    <Setting Name="AutoCheckForUpdates" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LastUpdateCheck" Type="System.DateTimeOffset" Scope="User">
+      <Value Profile="(Default)">01/01/2021 01:00:00 +00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
