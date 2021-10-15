@@ -13,7 +13,7 @@ namespace FoxyMonitor.Data
     {
         internal DbSet<Account> Accounts { get; set; }
         internal DbSet<Alert> Alerts { get; set; }
-        internal DbSet<PostAccountHistoricalDbItem> PostAccountHistoricalDbItems { get; set;}
+        internal DbSet<PostAccountHistoricalDbItem> PostAccountHistoricalDbItems { get; set; }
         internal DbSet<PostPoolInfo> PostPools { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

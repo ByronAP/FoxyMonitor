@@ -13,9 +13,9 @@ namespace FoxyMonitor.Utils
             var pibValue = tibValue / 1024;
             var eibValue = pibValue / 1024;
 
-            if(eibValue > 1) return $"{eibValue:N3} EiB";
-            
-            if(pibValue >  1) return $"{pibValue:N3} PiB";
+            if (eibValue > 1) return $"{eibValue:N3} EiB";
+
+            if (pibValue > 1) return $"{pibValue:N3} PiB";
 
             return $"{tibValue:N3} TiB";
 

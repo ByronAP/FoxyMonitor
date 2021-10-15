@@ -9,7 +9,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib" 
              xmlns:local="clr-namespace:FoxyMonitor.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="600">
+             d:DesignHeight="50" d:DesignWidth="600" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="ThemeModeDataSource"
                         ObjectType="{x:Type sys:Enum}"

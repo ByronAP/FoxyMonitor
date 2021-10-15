@@ -15,7 +15,7 @@ namespace FoxyMonitor.Utils
                 if (value == null || value.ToString().Trim() == string.Empty) return new ValidationResult(false, "Display Name can not be empty.");
 
                 var displayNameLength = value.ToString().Trim().Length;
-                 
+
                 if ((displayNameLength < MinLength) || (displayNameLength > MaxLength))
                 {
                     return new ValidationResult(false, $"Display Name should be between {MinLength}-{MaxLength} characters.");

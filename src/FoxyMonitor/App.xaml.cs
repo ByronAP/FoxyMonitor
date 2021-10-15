@@ -64,6 +64,7 @@ namespace FoxyMonitor
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<AccountUpdaterService>();
+                    services.AddHostedService<CheckForUpdatesService>();
                     services.AddHostedService<PoolInfoUpdaterService>();
                     services.AddSingleton<AppViewModel>();
                     services.AddSingleton<MainAppWindow>();
@@ -155,7 +156,7 @@ namespace FoxyMonitor
                                   var mainAppWindow = (MainAppWindow)MainWindow;
                                   mainAppWindow.BringToForeground();
 
-                            }));
+                              }));
                         }
                     }
                     catch

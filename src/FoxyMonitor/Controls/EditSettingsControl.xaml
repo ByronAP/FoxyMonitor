@@ -20,15 +20,17 @@
             <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="15" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="90" Width="140" Height="32" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-            <CheckBox Content="Log To File" IsChecked="True" />
+            <TextBlock Text="Log To" Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <RadioButton x:Name="File_Logging_Radio" Content="File" GroupName="Logging" Margin="0,0,6,0" Checked="Logging_Changed"/>
+            <RadioButton x:Name="Console_Logging_Radio" Content="Console" GroupName="Logging" Checked="Logging_Changed"/>
             <TextBlock Text="* Restart Required" FontSize="8" VerticalAlignment="Top" Margin="0,0,0,0" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-            <CheckBox Content="Auto Check For Updates" IsChecked="True" />
+            <CheckBox x:Name="Auto_Updates_Check" Content="Auto Check For Updates" Checked="AutoUpdate_CheckChanged" Unchecked="AutoUpdate_CheckChanged" />
         </StackPanel>
         
-        <Button Content="Delete Log Archives" Width="140" Height="32" Margin="0,16,0,0" />
-        <Button Content="Check For Updates" Width="140" Height="32" Margin="0,16,0,0" />
+        <Button Content="Delete Log Archives" Width="140" Height="32" Margin="0,16,0,0" Click="DeleteLogs" />
+        <Button Content="Check For Updates" Width="140" Height="32" Margin="0,16,0,0" Click="CheckForUpdates" />
         <TextBlock Text="{Binding Default.LastUpdateCheck}" Width="140" Height="32" Margin="0,16,0,0" >
             <TextBlock.DataContext>
                 <Properties:Settings/>

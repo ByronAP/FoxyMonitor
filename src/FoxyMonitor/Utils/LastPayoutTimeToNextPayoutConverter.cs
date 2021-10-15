@@ -11,7 +11,7 @@ namespace FoxyMonitor.Utils
         {
             var lastPayout = (DateTimeOffset)value;
             var nextPayout = lastPayout.AddHours(24);
-             var timeSpan = (nextPayout - DateTimeOffset.UtcNow).Duration();
+            var timeSpan = (nextPayout - DateTimeOffset.UtcNow).Duration();
             string result;
 
             if (timeSpan <= TimeSpan.FromSeconds(60))

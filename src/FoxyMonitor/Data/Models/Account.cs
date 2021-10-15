@@ -127,7 +127,7 @@ namespace FoxyMonitor.Data.Models
         /// 
         /// </summary>
         [Column("alerts")]
-        public ObservableCollection<Alert> Alerts {  get => _alerts; set => SetField(ref _alerts, value); }
+        public ObservableCollection<Alert> Alerts { get => _alerts; set => SetField(ref _alerts, value); }
         private ObservableCollection<Alert> _alerts;
 
         /// <summary>

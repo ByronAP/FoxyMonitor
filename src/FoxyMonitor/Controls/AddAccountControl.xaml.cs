@@ -1,10 +1,8 @@
-﻿using FoxyMonitor.Data;
-using FoxyMonitor.Data.Models;
+﻿using FoxyMonitor.Data.Models;
 using FoxyPoolApi;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;

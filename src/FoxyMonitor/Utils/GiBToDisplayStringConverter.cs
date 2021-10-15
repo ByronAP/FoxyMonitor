@@ -17,8 +17,8 @@ namespace FoxyMonitor.Utils
             if (eibValue > 1) return $"{eibValue:N3} EiB";
 
             if (pibValue > 1) return $"{pibValue:N3} PiB";
-            
-            if (tibValue >  1) return $"{tibValue:N3} TiB";
+
+            if (tibValue > 1) return $"{tibValue:N3} TiB";
 
             return $"{gibValue:N3} GiB";
 

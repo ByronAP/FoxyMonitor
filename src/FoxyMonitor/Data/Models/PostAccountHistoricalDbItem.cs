@@ -7,13 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FoxyMonitor.Data.Models
 {
     [Table("postAccountHistoricalItems")]
-    public class PostAccountHistoricalDbItem: NotifyChangeBase
+    public class PostAccountHistoricalDbItem : NotifyChangeBase
     {
         [Key]
         [Column("id")]
         public uint Id { get => _id; set => SetField(ref _id, value); }
         private uint _id;
-        
+
         [Required]
         [Column("accountId")]
         public uint AccountId { get; set; }
@@ -38,7 +38,7 @@ namespace FoxyMonitor.Data.Models
         public uint Shares { get => _shares; set => SetField(ref _shares, value); }
         private uint _shares;
 
-        public static PostAccountHistoricalDbItem FromApiItem (PostAccountHistoricalItem value)
+        public static PostAccountHistoricalDbItem FromApiItem(PostAccountHistoricalItem value)
         {
             return new PostAccountHistoricalDbItem
             {
