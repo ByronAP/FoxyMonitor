@@ -1,12 +1,10 @@
 ﻿using FoxyMonitor.Data.Models;
 using FoxyMonitor.ViewModels;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Extensions.Logging;
 using SplotControl.Models;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,11 +27,10 @@ namespace FoxyMonitor
             DataContext = MainAppViewModel;
             InitializeComponent();
 
-            var foregroundBrush = Foreground as SolidColorBrush;
-            appViewModel.ChartBrush = Foreground;
+            appViewModel.ChartBrush = EC_Chart_Tile.Foreground;
             appViewModel.GridOptions = new GridOptions
             {
-                GridBrush = new SolidColorBrush(Color.FromArgb(40, foregroundBrush.Color.R, foregroundBrush.Color.G, foregroundBrush.Color.B)),
+                GridBrush = new SolidColorBrush(Color.FromArgb(40, 200, 200, 200)),
                 GridLineWidth = 2,
                 FontSize = 8,
                 GridLineCount = 6
@@ -67,31 +64,6 @@ namespace FoxyMonitor
         private void OpenAccounts_Click(object sender, RoutedEventArgs e)
         {
             AccountsFlyout.IsOpen = true;
-            e.Handled = true;
-        }
-
-        private async void DeleteLogs_Click(object sender, RoutedEventArgs e)
-        {
-            var dialogResult = await DialogManager.ShowMessageAsync(this, "Confirm Delete", "Delete all log files?", MessageDialogStyle.AffirmativeAndNegative);
-
-            if (dialogResult == MessageDialogResult.Affirmative)
-            {
-                var logFiles = Directory.GetFiles(Utils.IOUtils.GetLoggingDirectory());
-                var delCount = 0;
-                foreach (var logFile in logFiles)
-                {
-                    try
-                    {
-                        File.Delete(logFile);
-                        delCount++;
-                    }
-                    catch
-                    {
-                        // ignore because we can not and will not delete the current log file
-                    }
-                }
-                _ = await DialogManager.ShowMessageAsync(this, "Complete", $"Deleted {delCount} log archive files.", MessageDialogStyle.Affirmative);
-            }
             e.Handled = true;
         }
 

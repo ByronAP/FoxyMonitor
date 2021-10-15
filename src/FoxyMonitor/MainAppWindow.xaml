@@ -238,7 +238,7 @@
             <mah:Tile Margin="6" Padding="0" Height="175" Width="456" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="{x:Static props:Resources.SharesHistoryChartHeaderText}">
                 <splot:SPlotControl x:Name="SharesPlotControl" Padding="0" Height="185" Width="476" Margin="0,2,0,0" HeaderText="" />
             </mah:Tile>
-            <mah:Tile Margin="6" Padding="0" Height="175" Width="456" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="{x:Static props:Resources.ECHistoryChartHeaderText}">
+            <mah:Tile x:Name="EC_Chart_Tile" Margin="6" Padding="0" Height="175" Width="456" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="{x:Static props:Resources.ECHistoryChartHeaderText}">
                 <splot:SPlotControl x:Name="EcPlotControl" Padding="0" Height="185" Width="476" Margin="0,2,0,0" HeaderText="" />
             </mah:Tile>
         </WrapPanel>

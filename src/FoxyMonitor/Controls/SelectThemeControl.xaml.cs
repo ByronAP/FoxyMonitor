@@ -1,5 +1,4 @@
 ﻿using FoxyMonitor.Data.Models;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -30,6 +29,9 @@ namespace FoxyMonitor.Controls
 
             ThemeMode = Properties.Settings.Default.ThemeMode;
             ThemeColor = Properties.Settings.Default.ThemeColor;
+
+            ThemeMode_SplitButton.SelectedValue = ThemeMode;
+            ThemeColor_SplitButton.SelectedValue = ThemeColor;
         }
 
         private void ThemeMode_SplitButton_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -51,6 +53,11 @@ namespace FoxyMonitor.Controls
                 }
 
                 OnSelectedThemeModeChanged?.Invoke(selectedThemeMode);
+
+                Properties.Settings.Default.ThemeMode = selectedThemeMode;
+                Properties.Settings.Default.Save();
+
+                App.SetTheme();
             }
         }
 
@@ -69,6 +76,11 @@ namespace FoxyMonitor.Controls
                 }
 
                 OnSelectedThemeColorChanged?.Invoke(selectedThemeColor);
+
+                Properties.Settings.Default.ThemeColor = selectedThemeColor;
+                Properties.Settings.Default.Save();
+
+                App.SetTheme();
             }
         }
     }

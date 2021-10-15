@@ -8,19 +8,25 @@
              xmlns:Properties="clr-namespace:FoxyMonitor.Properties" 
              x:Class="FoxyMonitor.Controls.EditSettingsControl"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <StackPanel Margin="16,32,16,16" >
         <local:SelectThemeControl x:Name="Theme_Control" />
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
             <TextBlock Text="Accounts Update Interval" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="15" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="30" Width="140" Height="32" />
+            <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="15" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="30" Width="140" Height="32" ValueChanged="AccountsUpdateInterval_ValueChanged" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
             <TextBlock Text="Pool Info Update Interval" VerticalAlignment="Center" Margin="0,0,6,0" />
             <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="15" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="90" Width="140" Height="32" />
         </StackPanel>
-        <CheckBox Content="Log To File" Margin="0,16,0,0" IsChecked="True" />
-        <CheckBox Content="Auto Check For Updates" Margin="0,16,0,0" IsChecked="True" />
+        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+            <CheckBox Content="Log To File" IsChecked="True" />
+            <TextBlock Text="* Restart Required" FontSize="8" VerticalAlignment="Top" Margin="0,0,0,0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+            <CheckBox Content="Auto Check For Updates" IsChecked="True" />
+        </StackPanel>
+        
         <Button Content="Delete Log Archives" Width="140" Height="32" Margin="0,16,0,0" />
         <Button Content="Check For Updates" Width="140" Height="32" Margin="0,16,0,0" />
         <TextBlock Text="{Binding Default.LastUpdateCheck}" Width="140" Height="32" Margin="0,16,0,0" >

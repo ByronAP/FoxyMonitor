@@ -29,7 +29,7 @@
     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
             <TextBlock Text="Theme Mode" Width="80" VerticalAlignment="Center" />
             <Border Grid.Column="1" BorderThickness="2" CornerRadius="2" Margin="2,0,2,0">
-                <mah:SplitButton x:Name="ThemeMode_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeModeDataSource}}" SelectedIndex="0" Padding="4" Margin="2,0,2,0" MinWidth="100" SelectionChanged="ThemeMode_SplitButton_SelectionChanged" />
+                <mah:SplitButton x:Name="ThemeMode_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeModeDataSource}}" Padding="4" Margin="2,0,2,0" MinWidth="100" SelectionChanged="ThemeMode_SplitButton_SelectionChanged" />
                 <Border.BorderBrush>
                     <LinearGradientBrush EndPoint="1,1" StartPoint="1,0">
                         <GradientStop Color="Transparent" Offset="0"/>
@@ -41,7 +41,7 @@
             </Border>
             <TextBlock Text="Theme Color" VerticalAlignment="Center" Margin="16,0,8,0" />
         <Border Grid.Column="1" BorderThickness="2" CornerRadius="2" Margin="2,0,2,0">
-            <mah:SplitButton x:Name="ThemeColor_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeColorDataSource}}" SelectedIndex="2" Padding="4" Margin="2,0,2,0" MinWidth="110" SelectionChanged="ThemeColor_SplitButton_SelectionChanged" IsEnabled="False" />
+            <mah:SplitButton x:Name="ThemeColor_SplitButton" BorderThickness="0" ItemsSource="{Binding Source={StaticResource ThemeColorDataSource}}" Padding="4" Margin="2,0,2,0" MinWidth="110" SelectionChanged="ThemeColor_SplitButton_SelectionChanged" IsEnabled="False" />
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="1,1" StartPoint="1,0">
                     <GradientStop Color="Transparent" Offset="0"/>

@@ -24,6 +24,19 @@ namespace FoxyMonitor.Services
             _logger = logger;
             _appViewModel = appViewModel;
             _semaphore = new SemaphoreSlim(1);
+            Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Properties.Settings.Default.AccountsUpdateInterval))
+            {
+                if (_timer == null) return;
+
+                _timer.Change(Properties.Settings.Default.AccountsUpdateInterval, Properties.Settings.Default.AccountsUpdateInterval);
+
+                _logger.LogInformation("Account updater interval changed to {NewInterval}", Properties.Settings.Default.AccountsUpdateInterval);
+            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -132,22 +145,22 @@ namespace FoxyMonitor.Services
                                                     {
                                                         // make sure nothing has changed for the given point
                                                         var record = account.PostAccountHistoricalDbItems.First(x => x.CreatedAt.Equals(item.CreatedAt));
-                                                        if(record.ShareCount != item.ShareCount)
+                                                        if (record.ShareCount != item.ShareCount)
                                                         {
                                                             record.ShareCount = item.ShareCount;
                                                         }
 
-                                                        if(record.Difficulty != item.Difficulty)
+                                                        if (record.Difficulty != item.Difficulty)
                                                         {
                                                             record.Difficulty = item.Difficulty;
                                                         }
 
-                                                        if(record.EstCapacity != item.Ec)
+                                                        if (record.EstCapacity != item.Ec)
                                                         {
                                                             record.EstCapacity = item.Ec;
                                                         }
 
-                                                        if(record.Shares != item.Shares)
+                                                        if (record.Shares != item.Shares)
                                                         {
                                                             record.Shares = item.Shares;
                                                         }

@@ -22,6 +22,19 @@ namespace FoxyMonitor.Services
         {
             _logger = logger;
             _appViewModel = appViewModel;
+            Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Properties.Settings.Default.PoolInfoUpdateInterval))
+            {
+                if (_timer == null) return;
+
+                _timer.Change(Properties.Settings.Default.PoolInfoUpdateInterval, Properties.Settings.Default.PoolInfoUpdateInterval);
+
+                _logger.LogInformation("Pool info updater interval changed to {NewInterval}", Properties.Settings.Default.PoolInfoUpdateInterval);
+            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
