@@ -25,10 +25,8 @@
             <RadioButton x:Name="Console_Logging_Radio" Content="Console" GroupName="Logging" Checked="Logging_Changed"/>
             <TextBlock Text="* Restart Required" FontSize="8" VerticalAlignment="Top" Margin="0,0,0,0" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-            <CheckBox x:Name="Auto_Updates_Check" Content="Auto Check For Updates" Checked="AutoUpdate_CheckChanged" Unchecked="AutoUpdate_CheckChanged" />
-        </StackPanel>
-        
+        <CheckBox x:Name="Auto_Updates_Check" Content="Auto Check For Updates" Checked="AutoUpdate_CheckChanged" Unchecked="AutoUpdate_CheckChanged" Margin="0,16,0,0"/>
+        <CheckBox x:Name="Minimize_On_Exit" Content="Keep Running In Background" Checked="MinOnExit_CheckChanged" Unchecked="MinOnExit_CheckChanged" Margin="0,16,0,0"/>
         <Button Content="Delete Log Archives" Width="140" Height="32" Margin="0,16,0,0" Click="DeleteLogs" />
         <Button Content="Check For Updates" Width="140" Height="32" Margin="0,16,0,0" Click="CheckForUpdates" />
         <TextBlock Text="{Binding Default.LastUpdateCheck}" Width="140" Height="32" Margin="0,16,0,0" >
