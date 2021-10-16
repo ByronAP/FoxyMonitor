@@ -143,12 +143,12 @@ namespace FoxyMonitor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MinimizeOnExit {
+        public bool HideOnExit {
             get {
-                return ((bool)(this["MinimizeOnExit"]));
+                return ((bool)(this["HideOnExit"]));
             }
             set {
-                this["MinimizeOnExit"] = value;
+                this["HideOnExit"] = value;
             }
         }
     }

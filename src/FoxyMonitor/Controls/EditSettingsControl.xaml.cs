@@ -91,7 +91,7 @@ namespace FoxyMonitor.Controls
             }
 
             Auto_Updates_Check.IsChecked = Properties.Settings.Default.AutoCheckForUpdates;
-            Minimize_On_Exit.IsChecked = Properties.Settings.Default.MinimizeOnExit;
+            Hide_On_Exit.IsChecked = Properties.Settings.Default.HideOnExit;
         }
 
         private void AccountsUpdateInterval_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
@@ -140,13 +140,13 @@ namespace FoxyMonitor.Controls
             Properties.Settings.Default.Save();
         }
 
-        private void MinOnExit_CheckChanged(object sender, RoutedEventArgs e)
+        private void HideOnExit_CheckChanged(object sender, RoutedEventArgs e)
         {
             var check = e.OriginalSource as CheckBox;
 
             if (check == null || check.IsChecked == null) return;
 
-            Properties.Settings.Default.MinimizeOnExit = (bool)check.IsChecked;
+            Properties.Settings.Default.HideOnExit = (bool)check.IsChecked;
             Properties.Settings.Default.Save();
         }
     }
