@@ -121,5 +121,29 @@ namespace FoxyMonitor
             Topmost = false;
             _ = Focus();
         }
+
+        private void metroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Properties.Settings.Default.HideOnExit)
+            {
+                Hide();
+                e.Cancel = true;
+            }
+        }
+
+        private async void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            // this helps ensure the notifyicon is gone before exiting the app
+            AppNotifyIcon.Visibility = Visibility.Collapsed;
+            await Task.Delay(500);
+            Application.Current.Shutdown(0);
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            e.Handled = true;
+        }
     }
 }

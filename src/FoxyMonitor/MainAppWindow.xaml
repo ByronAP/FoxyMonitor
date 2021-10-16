@@ -9,6 +9,7 @@
     xmlns:viewmodels="clr-namespace:FoxyMonitor.ViewModels" 
     xmlns:models="clr-namespace:FoxyMonitor.Data.Models"
     xmlns:splot="clr-namespace:SplotControl;assembly=SplotControl"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:props="clr-namespace:FoxyMonitor.Properties"
     d:DataContext="{d:DesignInstance Type=viewmodels:AppViewModel}"
     x:Name="metroWindow" x:Class="FoxyMonitor.MainAppWindow"
@@ -16,14 +17,12 @@
     GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
     ResizeMode="CanResizeWithGrip"
     Title="FoxyMonitor" Height="550" Width="938" MinHeight="400" MinWidth="563"
-    Icon="pack://application:,,,/Resources/app.ico" ShowIconOnTitleBar="False">
+    Icon="pack://application:,,,/Resources/app.ico" ShowIconOnTitleBar="False" Closing="metroWindow_Closing">
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
             <Button ToolTip="{x:Static props:Resources.OpenAccountsText}" Click="OpenAccounts_Click" ToolTipService.InitialShowDelay="0">
-                <iconPacks:PackIconMaterial Width="22"
-                                            Height="22"
-                                            Kind="AccountDetailsOutline" />
+                <iconPacks:PackIconMaterial Width="22" Height="22" Kind="AccountDetailsOutline" />
             </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
@@ -264,5 +263,14 @@
             </StatusBarItem>
         </StatusBar>
 
+        <tb:TaskbarIcon x:Name="AppNotifyIcon" IconSource="pack://application:,,,/Resources/app.ico" ToolTipText="FoxyMonitor" MenuActivation="LeftOrRightClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Open [O]" Click="Open_Click"/>
+                    <Separator />
+                    <MenuItem Header="E_xit [X]" Click="Exit_Click" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
     </Grid>
 </mah:MetroWindow>

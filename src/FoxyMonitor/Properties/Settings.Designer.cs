@@ -139,5 +139,17 @@ namespace FoxyMonitor.Properties {
                 return ((string)(this["GitHubRepoUrl"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HideOnExit {
+            get {
+                return ((bool)(this["HideOnExit"]));
+            }
+            set {
+                this["HideOnExit"] = value;
+            }
+        }
     }
 }
