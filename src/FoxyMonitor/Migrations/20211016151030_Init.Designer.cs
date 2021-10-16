@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoxyMonitor.Migrations
 {
     [DbContext(typeof(FMDbContext))]
-    [Migration("20211016005608_Init")]
+    [Migration("20211016151030_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("AuthToken")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("authToken");
 
@@ -43,6 +44,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("displayName");
 
                     b.Property<string>("DistributionRatio")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("distRatio");
 
@@ -68,6 +70,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("launcherId");
 
                     b.Property<string>("PayoutAddress")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("payoutAddress");
 
@@ -76,10 +79,12 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("pendingBalance");
 
                     b.Property<string>("PoolName")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("poolName");
 
                     b.Property<string>("PoolPubKey")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("poolPubKey");
 
@@ -92,9 +97,6 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("shares");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DisplayName", "PoolName")
-                        .IsUnique();
 
                     b.ToTable("accounts");
                 });
@@ -132,6 +134,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("title");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("url");
 
@@ -200,18 +203,22 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("avgEffort");
 
                     b.Property<string>("Balance")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("balance");
 
                     b.Property<string>("BlockExplorerAddressUrlTemplate")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("blockExplorerAddressUrlTemplate");
 
                     b.Property<string>("BlockExplorerBlockUrlTemplate")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("blockExplorerBlockUrlTemplate");
 
                     b.Property<string>("BlockExplorerCoinUrlTemplate")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("blockExplorerCoinUrlTemplate");
 
@@ -224,6 +231,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("blocksPerDay");
 
                     b.Property<string>("Coin")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("coin");
 
@@ -232,6 +240,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("dailyRewardPerPiB");
 
                     b.Property<string>("DefaultDistributionRatio")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("defaultDistributionRatio");
 
@@ -240,6 +249,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("difficulty");
 
                     b.Property<string>("FarmingUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("farmingUrl");
 
@@ -268,6 +278,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("minimumPayout");
 
                     b.Property<string>("NetworkSpaceInTiB")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("networkSpaceInTiB");
 
@@ -276,6 +287,7 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("onDemandPayoutFee");
 
                     b.Property<string>("PoolAddress")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("poolAddress");
 
@@ -288,10 +300,12 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("poolFee");
 
                     b.Property<string>("PoolName")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("poolName");
 
                     b.Property<string>("PoolUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("poolUrl");
 
@@ -300,10 +314,12 @@ namespace FoxyMonitor.Migrations
                         .HasColumnName("receivedAt");
 
                     b.Property<string>("Ticker")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("ticker");
 
                     b.Property<string>("Version")
+                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("version");
 

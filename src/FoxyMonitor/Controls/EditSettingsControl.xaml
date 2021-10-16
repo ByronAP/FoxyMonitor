@@ -17,7 +17,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
             <TextBlock Text="Pool Info Update Interval" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="15" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="90" Width="140" Height="32" />
+            <mah:NumericUpDown VerticalAlignment="Center" Maximum="3600" Minimum="60" NumericInputMode="Numbers" ParsingNumberStyle="Integer" Value="90" Width="140" Height="32" ValueChanged="PoolsUpdateInterval_ValueChanged" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
             <TextBlock Text="Log To" Margin="0,0,6,0" VerticalAlignment="Center"/>

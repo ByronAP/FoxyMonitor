@@ -1,9 +1,11 @@
-﻿using MahApps.Metro.Controls.Dialogs;
+﻿using FoxyMonitor.Utils;
+using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace FoxyMonitor.Controls
 {
@@ -21,8 +23,31 @@ namespace FoxyMonitor.Controls
 
         private async void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            //TODO: Check for updates
-            await Task.CompletedTask;
+            if (ParentWindow == null) return;
+
+            var progressDialog = await ParentWindow.ShowProgressAsync("Please wait...", "Checking for application updates", false);
+            try
+            {
+                var checkResult = await AppUpdater.CheckForUpdateAsync(ParentWindow.Logger);
+                if (checkResult.HasUpdate && checkResult.GitHubReleaseResponse != null && checkResult.GitHubReleaseResponse.HtmlUrl != null)
+                {
+                    await progressDialog.CloseAsync();
+                    var dialogResult = await DialogManager.ShowMessageAsync(ParentWindow, "Application Update", "A new application version was found. Do you wish to visit the download page?", MessageDialogStyle.AffirmativeAndNegative);
+
+                    if (dialogResult == MessageDialogResult.Affirmative)
+                    {
+                        ParentWindow.Hyperlink_RequestNavigate(this, new RequestNavigateEventArgs(new Uri(checkResult.GitHubReleaseResponse.HtmlUrl), ""));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ParentWindow.Logger.LogError(ex, "Exception thrown while checking for application updates.");
+            }
+            finally
+            {
+                if (progressDialog != null && progressDialog.IsOpen) await progressDialog.CloseAsync();
+            }
         }
 
         private async void DeleteLogs(object sender, RoutedEventArgs e)
@@ -31,7 +56,7 @@ namespace FoxyMonitor.Controls
 
             if (dialogResult == MessageDialogResult.Affirmative)
             {
-                var logFiles = Directory.GetFiles(Utils.IOUtils.GetLoggingDirectory());
+                var logFiles = Directory.GetFiles(IOUtils.GetLoggingDirectory());
                 var delCount = 0;
                 foreach (var logFile in logFiles)
                 {
@@ -71,9 +96,19 @@ namespace FoxyMonitor.Controls
         private void AccountsUpdateInterval_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
             var value = Convert.ToUInt32(e.NewValue);
-            if (value > 15 && value <= 3600)
+            if (value >= 15 && value <= 3600)
             {
                 Properties.Settings.Default.AccountsUpdateInterval = TimeSpan.FromSeconds(value);
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void PoolsUpdateInterval_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            var value = Convert.ToUInt32(e.NewValue);
+            if (value >= 60 && value <= 3600)
+            {
+                Properties.Settings.Default.PoolInfoUpdateInterval = TimeSpan.FromSeconds(value);
                 Properties.Settings.Default.Save();
             }
         }

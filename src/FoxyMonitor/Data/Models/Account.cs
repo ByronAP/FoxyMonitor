@@ -1,6 +1,5 @@
 ﻿using FoxyMonitor.Utils;
 using FoxyPoolApi;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +9,6 @@ namespace FoxyMonitor.Data.Models
 {
     // PK is built using DisplayName and the PoolType
     [Table("accounts")]
-    [Index(nameof(DisplayName), nameof(PoolName), IsUnique = true)]
     public class Account : NotifyChangeBase
     {
         [Key]
