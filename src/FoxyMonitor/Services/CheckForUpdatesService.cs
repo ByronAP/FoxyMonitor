@@ -70,27 +70,34 @@ namespace FoxyMonitor.Services
 
         private async void DoWork(object? state)
         {
-            var checkUpdateResponse = await AppUpdater.CheckForUpdateAsync(_logger);
-
-            if (checkUpdateResponse.HasUpdate)
+            try
             {
-                await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
-                {
-                    var newAlert = new Alert
-                    {
-                        Created = DateTimeOffset.UtcNow,
-                        AccountId = 0,
-                        Level = LogLevel.Warning,
-                        Message = $"An application update is available v{checkUpdateResponse.GitHubReleaseResponse?.TagName}.",
-                        PendingDeletion = false,
-                        Title = "Application Update",
-                        Url = checkUpdateResponse.GitHubReleaseResponse == null ? "" : checkUpdateResponse.GitHubReleaseResponse.HtmlUrl,
-                        Viewed = false
-                    };
+                var checkUpdateResponse = await AppUpdater.CheckForUpdateAsync(_logger);
 
-                    await _appViewModel.FmDbContext.Alerts.AddAsync(newAlert);
-                    _ = await _appViewModel.FmDbContext.SaveChangesAsync();
-                }));
+                if (checkUpdateResponse.HasUpdate)
+                {
+                    await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
+                    {
+                        var newAlert = new Alert
+                        {
+                            Created = DateTimeOffset.UtcNow,
+                            AccountId = 0,
+                            Level = LogLevel.Warning,
+                            Message = $"An application update is available v{checkUpdateResponse.GitHubReleaseResponse?.TagName}.",
+                            PendingDeletion = false,
+                            Title = "Application Update",
+                            Url = checkUpdateResponse.GitHubReleaseResponse == null ? "" : checkUpdateResponse.GitHubReleaseResponse.HtmlUrl,
+                            Viewed = false
+                        };
+
+                        await _appViewModel.FmDbContext.Alerts.AddAsync(newAlert);
+                        _ = await _appViewModel.FmDbContext.SaveChangesAsync();
+                    }));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception thrown by updates service.");
             }
         }
 
