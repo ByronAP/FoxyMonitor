@@ -4,6 +4,7 @@ using FoxyPoolApi;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace FoxyMonitor.Services
     {
         private readonly ILogger<PoolInfoUpdaterService> _logger;
         private readonly AppViewModel _appViewModel;
-        private Timer _timer;
+        private Timer? _timer;
         private int _executionCount;
         private bool _disposedValue;
 
@@ -25,12 +26,10 @@ namespace FoxyMonitor.Services
             Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
         }
 
-        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
         {
-            if (e.PropertyName == nameof(Properties.Settings.Default.PoolInfoUpdateInterval))
+            if (_timer != null && e != null && e.PropertyName == nameof(Properties.Settings.Default.PoolInfoUpdateInterval))
             {
-                if (_timer == null) return;
-
                 _timer.Change(Properties.Settings.Default.PoolInfoUpdateInterval, Properties.Settings.Default.PoolInfoUpdateInterval);
 
                 _logger.LogInformation("Pool info updater interval changed to {NewInterval}", Properties.Settings.Default.PoolInfoUpdateInterval);
@@ -50,51 +49,65 @@ namespace FoxyMonitor.Services
         {
             _logger.LogInformation("Pool info updater service is stopping.");
 
-            _ = (_timer?.Change(Timeout.Infinite, 0));
+            _ = _timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
         }
 
-        private async void DoWork(object state)
+        private async void DoWork(object? state)
         {
-            // do our work on the same thread as the dbcontext
-            await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
+            try
             {
-                foreach (var poolName in Enum.GetNames(typeof(PostPool)))
+                // do our work on the same thread as the dbcontext
+                await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
                 {
-                    using var postPoolApi = new PostApiClient((PostPool)Enum.Parse(typeof(PostPool), poolName, true));
-
-                    var poolConfig = await postPoolApi.GetConfigAsync();
-                    var pool = await postPoolApi.GetPoolAsync();
-                    var rewards = await postPoolApi.GetRewardsAsync();
-                    var payouts = await postPoolApi.GetPayoutsAsync();
-                    var lastPayoutTime = payouts.Max(x => x.CreatedAt);
-
-                    if (_appViewModel.FmDbContext.PostPools.Any(x => x.PoolUrl.ToLower() == poolConfig.PoolUrl.ToLower()))
+                    foreach (var poolName in Enum.GetNames(typeof(PostPool)))
                     {
-                        // update the existing record
-                        var record = _appViewModel.FmDbContext.PostPools.First(x => x.PoolUrl.ToLower() == poolConfig.PoolUrl.ToLower());
-                        if (record.LastPayoutTime != lastPayoutTime)
+                        using var postPoolApi = new PostApiClient((PostPool)Enum.Parse(typeof(PostPool), poolName, true));
+
+                        var poolConfig = await postPoolApi.GetConfigAsync();
+                        var pool = await postPoolApi.GetPoolAsync();
+                        var rewards = await postPoolApi.GetRewardsAsync();
+                        var payouts = await postPoolApi.GetPayoutsAsync();
+                        var lastPayoutTime = payouts.Max(x => x.CreatedAt);
+
+                        if (poolConfig != null && poolConfig.PoolUrl != null && _appViewModel.FmDbContext.PostPools.Any(x => x.PoolUrl.ToLower() == poolConfig.PoolUrl.ToLower()))
                         {
-                            // TODO: alert of payout
+                            // update the existing record
+                            var record = _appViewModel.FmDbContext.PostPools.First(x => x.PoolUrl.ToLower() == poolConfig.PoolUrl.ToLower());
+                            if (record.LastPayoutTime != lastPayoutTime)
+                            {
+                                // TODO: alert of payout
+                            }
+
+                            record.UpdateFromApiData(poolConfig, pool, rewards, lastPayoutTime);
                         }
+                        else if (poolConfig != null)
+                        {
+                            // add new record
+                            var newRecord = PostPoolInfo.FromApiData(poolConfig, pool, rewards, lastPayoutTime);
+                            newRecord.PoolApiName = (PostPool)Enum.Parse(typeof(PostPool), poolName, true);
+                            _ = _appViewModel.FmDbContext.PostPools.Add(newRecord);
+                        }
+                    }
+                    _ = await _appViewModel.FmDbContext.SaveChangesAsync();
+                }));
 
-                        record.UpdateFromApiData(poolConfig, pool, rewards, lastPayoutTime);
-                    }
-                    else
-                    {
-                        // add new record
-                        var newRecord = PostPoolInfo.FromApiData(poolConfig, pool, rewards, lastPayoutTime);
-                        newRecord.PoolApiName = (PostPool)Enum.Parse(typeof(PostPool), poolName, true);
-                        _ = _appViewModel.FmDbContext.PostPools.Add(newRecord);
-                    }
+                var count = Interlocked.Increment(ref _executionCount);
+
+                _logger.LogInformation("Pool info updater service completed a round. Count: {Count}", count);
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    _logger.LogError(ex, "Pool info updater service threw an exception.");
                 }
-                _ = await _appViewModel.FmDbContext.SaveChangesAsync();
-            }));
-
-            var count = Interlocked.Increment(ref _executionCount);
-
-            _logger.LogInformation("Pool info updater service completed a round. Count: {Count}", count);
+                catch
+                {
+                    // ignore
+                }
+            }
         }
 
         protected virtual void Dispose(bool disposing)

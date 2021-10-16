@@ -4,6 +4,7 @@ using FoxyPoolApi;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace FoxyMonitor.Services
         private readonly ILogger<AccountUpdaterService> _logger;
         private readonly AppViewModel _appViewModel;
         private readonly SemaphoreSlim _semaphore;
-        private Timer _timer;
+        private Timer? _timer;
         private int _executionCount;
         private bool _disposedValue;
 
@@ -27,12 +28,10 @@ namespace FoxyMonitor.Services
             Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
         }
 
-        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
         {
-            if (e.PropertyName == nameof(Properties.Settings.Default.AccountsUpdateInterval))
+            if (_timer != null && e?.PropertyName == nameof(Properties.Settings.Default.AccountsUpdateInterval))
             {
-                if (_timer == null) return;
-
                 _timer.Change(Properties.Settings.Default.AccountsUpdateInterval, Properties.Settings.Default.AccountsUpdateInterval);
 
                 _logger.LogInformation("Account updater interval changed to {NewInterval}", Properties.Settings.Default.AccountsUpdateInterval);
@@ -57,7 +56,7 @@ namespace FoxyMonitor.Services
             return Task.CompletedTask;
         }
 
-        private async void DoWork(object state)
+        private async void DoWork(object? state)
         {
             try
             {
@@ -76,13 +75,13 @@ namespace FoxyMonitor.Services
                                 var accountData = await postApiClient.GetAccountAsync(account.LauncherId);
                                 if (accountData != null)
                                 {
-                                    if (account.PoolPubKey != accountData.PoolPublicKey)
+                                    if (accountData.PoolPublicKey != null && account.PoolPubKey != accountData.PoolPublicKey)
                                     {
                                         account.PoolPubKey = accountData.PoolPublicKey;
                                         // TODO: Issue an alert
                                     }
 
-                                    if (account.PayoutAddress != accountData.PayoutAddress)
+                                    if (accountData.PayoutAddress != null && account.PayoutAddress != accountData.PayoutAddress)
                                     {
                                         account.PayoutAddress = accountData.PayoutAddress;
                                         // TODO: Issue an alert
@@ -103,12 +102,12 @@ namespace FoxyMonitor.Services
                                         account.EstCapacity = accountData.Ec;
                                     }
 
-                                    if (account.DistributionRatio != accountData.DistributionRatio)
+                                    if (accountData.DistributionRatio != null && account.DistributionRatio != accountData.DistributionRatio)
                                     {
                                         account.DistributionRatio = accountData.DistributionRatio;
                                     }
 
-                                    if (account.DisplayName != accountData.Name)
+                                    if (accountData.Name != null && account.DisplayName != accountData.Name)
                                     {
                                         account.DisplayName = accountData.Name;
                                     }

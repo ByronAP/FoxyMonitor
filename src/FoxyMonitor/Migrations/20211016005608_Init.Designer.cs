@@ -6,18 +6,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-#nullable disable
-
 namespace FoxyMonitor.Migrations
 {
     [DbContext(typeof(FMDbContext))]
-    [Migration("20210923025440_Init")]
+    [Migration("20211016005608_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0-rc.1.21452.10");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("FoxyMonitor.Data.Models.Account", b =>
                 {
@@ -313,15 +312,6 @@ namespace FoxyMonitor.Migrations
                     b.ToTable("postPools");
                 });
 
-            modelBuilder.Entity("FoxyMonitor.Data.Models.Alert", b =>
-                {
-                    b.HasOne("FoxyMonitor.Data.Models.Account", null)
-                        .WithMany("Alerts")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FoxyMonitor.Data.Models.PostAccountHistoricalDbItem", b =>
                 {
                     b.HasOne("FoxyMonitor.Data.Models.Account", null)
@@ -333,8 +323,6 @@ namespace FoxyMonitor.Migrations
 
             modelBuilder.Entity("FoxyMonitor.Data.Models.Account", b =>
                 {
-                    b.Navigation("Alerts");
-
                     b.Navigation("PostAccountHistoricalDbItems");
                 });
 #pragma warning restore 612, 618

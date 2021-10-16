@@ -10,6 +10,9 @@ namespace FoxyMonitor.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return "Error";
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             switch (value.ToString().ToLowerInvariant())
             {
                 case "chia":
@@ -25,6 +28,7 @@ namespace FoxyMonitor.Utils
                 default:
                     return App.Current.Resources["FoxyGlyph"];
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -9,7 +9,9 @@ namespace FoxyMonitor.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
             return decimal.Parse(value.ToString());
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

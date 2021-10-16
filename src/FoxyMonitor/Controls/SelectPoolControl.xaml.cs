@@ -10,6 +10,7 @@ namespace FoxyMonitor.Controls
     /// </summary>
     public partial class SelectPoolControl : UserControl
     {
+#pragma warning disable CS8603 // Possible null reference return.
         public static readonly DependencyProperty PoolTypeProperty =
             DependencyProperty.Register("PoolType", typeof(PoolType),
                 typeof(UserInputControl), new PropertyMetadata(null));
@@ -19,10 +20,12 @@ namespace FoxyMonitor.Controls
                 typeof(UserInputControl), new PropertyMetadata(null));
 
         public PoolType PoolType { get => (PoolType)GetValue(PoolTypeProperty); set { SetValue(PoolTypeProperty, value); } }
+
         public string PoolName { get => GetValue(PoolNameProperty) as string; set { SetValue(PoolNameProperty, value); } }
 
-        public event SelectedPoolTypeChanged OnSelectedPoolTypeChanged;
-        public event SelectedPoolNameChanged OnSelectedPoolNameChanged;
+        public event SelectedPoolTypeChanged? OnSelectedPoolTypeChanged;
+        public event SelectedPoolNameChanged? OnSelectedPoolNameChanged;
+#pragma warning restore CS8603 // Possible null reference return.
 
         public SelectPoolControl()
         {
@@ -60,7 +63,9 @@ namespace FoxyMonitor.Controls
         {
             if (PoolType_SplitButton == null || PoolName_SplitButton == null || PoolName_SplitButton.SelectedItem == null || CoinLogo == null) return;
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var poolName = PoolName_SplitButton.SelectedItem.ToString().ToLowerInvariant();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             PoolName = poolName;
 

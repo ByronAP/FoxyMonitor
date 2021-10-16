@@ -1,6 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using FoxyMonitor.Data.Models;
+using FoxyMonitor.Utils;
+using FoxyMonitor.ViewModels;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,23 +13,23 @@ namespace FoxyMonitor.Services
     internal class CheckForUpdatesService : IHostedService, IDisposable
     {
         private readonly TimeSpan UpdateCheckInterval;
+        private readonly AppViewModel _appViewModel;
         private readonly ILogger<CheckForUpdatesService> _logger;
-        private Timer _timer;
+        private Timer? _timer;
         private bool _disposedValue;
 
-        public CheckForUpdatesService(ILogger<CheckForUpdatesService> logger)
+        public CheckForUpdatesService(AppViewModel appViewModel, ILogger<CheckForUpdatesService> logger)
         {
             _logger = logger;
             UpdateCheckInterval = TimeSpan.FromHours(6);
+            _appViewModel = appViewModel;
             Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
         }
 
-        private async void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
         {
-            if (e.PropertyName == nameof(Properties.Settings.Default.AutoCheckForUpdates))
+            if (_timer != null && e?.PropertyName == nameof(Properties.Settings.Default.AutoCheckForUpdates))
             {
-                if (_timer == null) return;
-
                 if (Properties.Settings.Default.AutoCheckForUpdates)
                 {
                     await StartAsync(CancellationToken.None);
@@ -59,15 +63,35 @@ namespace FoxyMonitor.Services
         {
             _logger.LogInformation("Check for updates service is stopping.");
 
-            _ = (_timer?.Change(Timeout.Infinite, 0));
+            _ = _timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
         }
 
-        private async void DoWork(object state)
+        private async void DoWork(object? state)
         {
-            // TODO: Check For Updates
-            await Task.Delay(2000);
+            var checkUpdateResponse = await AppUpdater.CheckForUpdateAsync(_logger);
+
+            if (checkUpdateResponse.HasUpdate)
+            {
+                await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
+                {
+                    var newAlert = new Alert
+                    {
+                        Created = DateTimeOffset.UtcNow,
+                        AccountId = 0,
+                        Level = LogLevel.Warning,
+                        Message = $"An application update is available v{checkUpdateResponse.GitHubReleaseResponse?.TagName}.",
+                        PendingDeletion = false,
+                        Title = "Application Update",
+                        Url = checkUpdateResponse.GitHubReleaseResponse == null ? "" : checkUpdateResponse.GitHubReleaseResponse.HtmlUrl,
+                        Viewed = false
+                    };
+
+                    await _appViewModel.FmDbContext.Alerts.AddAsync(newAlert);
+                    _ = await _appViewModel.FmDbContext.SaveChangesAsync();
+                }));
+            }
         }
 
         protected virtual void Dispose(bool disposing)

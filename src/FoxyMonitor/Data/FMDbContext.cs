@@ -30,10 +30,12 @@ namespace FoxyMonitor.Data
             base.OnConfiguring(optionsBuilder);
         }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public FMDbContext()
         {
             if (!MigrateDbAsync().Result) App.Current.Shutdown();
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,46 +46,46 @@ namespace FoxyMonitor.Data
         {
             if (Database.GetPendingMigrations().Any())
             {
-                var logger = App.Host_Builder.Services.GetService<ILogger<FMDbContext>>();
+                var logger = App.Host_Builder?.Services.GetService<ILogger<FMDbContext>>();
 
                 try
                 {
-                    logger.LogInformation("Database has missing migrations or doesn't exist, applying migrations.");
+                    logger?.LogInformation("Database has missing migrations or doesn't exist, applying migrations.");
                     await Database.MigrateAsync();
-                    logger.LogInformation("Database migrations applied.");
+                    logger?.LogInformation("Database migrations applied.");
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Failed to apply migrations, db is incompatible.");
+                    logger?.LogError(ex, "Failed to apply migrations, db is incompatible.");
 
-                    logger.LogWarning(ex, "Attempting to retrieve existing accounts before db deletion.");
-                    Account[] accounts = null;
+                    logger?.LogWarning(ex, "Attempting to retrieve existing accounts before db deletion.");
+                    Account[]? accounts = null;
                     try
                     {
                         accounts = Accounts.ToArray();
                     }
                     catch (Exception exx)
                     {
-                        logger.LogError(exx, "Failed to retrieve accounts.");
+                        logger?.LogError(exx, "Failed to retrieve accounts.");
                     }
 
-                    logger.LogWarning("Deleting database due to incompatability.");
+                    logger?.LogWarning("Deleting database due to incompatability.");
                     var isDeleted = await Database.EnsureDeletedAsync();
                     if (isDeleted)
                     {
-                        logger.LogWarning("Database delete success.");
-                        logger.LogWarning("Attempting to create new db.");
+                        logger?.LogWarning("Database delete success.");
+                        logger?.LogWarning("Attempting to create new db.");
                         try
                         {
                             await Database.MigrateAsync();
                         }
                         catch (Exception exx)
                         {
-                            logger.LogError(exx, "Failed to create new db.");
+                            logger?.LogError(exx, "Failed to create new db.");
                             return false;
                         }
 
-                        logger.LogWarning("Attempting to migrate accounts to new db.");
+                        logger?.LogWarning("Attempting to migrate accounts to new db.");
                         try
                         {
                             if (accounts != null)
@@ -97,21 +99,21 @@ namespace FoxyMonitor.Data
                                     }
                                     catch (Exception exx)
                                     {
-                                        logger.LogError(exx, "Faild to migrate account {ID}: {DisplayName}", account.Id, account.DisplayName);
+                                        logger?.LogError(exx, "Faild to migrate account {ID}: {DisplayName}", account.Id, account.DisplayName);
                                     }
                                 }
                             }
                         }
                         catch (Exception exx)
                         {
-                            logger.LogError(exx, "Failed to migrate accounts.");
+                            logger?.LogError(exx, "Failed to migrate accounts.");
                         }
 
                         return true;
                     }
                     else
                     {
-                        logger.LogError("Database delete failed.");
+                        logger?.LogError("Database delete failed.");
                     }
 
                     return false;

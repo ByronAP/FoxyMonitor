@@ -21,10 +21,10 @@ namespace FoxyMonitor.Controls
         public ThemeMode ThemeMode { get => (ThemeMode)GetValue(ThemeModeProperty); set { SetValue(ThemeModeProperty, value); } }
         public ThemeColor ThemeColor { get => (ThemeColor)GetValue(ThemeColorProperty); set { SetValue(ThemeColorProperty, value); } }
 
-        public event SelectedThemeModeChanged OnSelectedThemeModeChanged;
-        public event SelectedThemeColorChanged OnSelectedThemeColorChanged;
+        public event SelectedThemeModeChanged? OnSelectedThemeModeChanged;
+        public event SelectedThemeColorChanged? OnSelectedThemeColorChanged;
 
-        private MainAppWindow ParentWindow;
+        private MainAppWindow? ParentWindow;
 
         public SelectThemeControl()
         {

@@ -12,9 +12,11 @@ namespace FoxyMonitor.Utils
 
             public override ValidationResult Validate(object value, CultureInfo cultureInfo)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 if (value == null || value.ToString().Trim() == string.Empty) return new ValidationResult(false, "Display Name can not be empty.");
 
                 var displayNameLength = value.ToString().Trim().Length;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
                 if ((displayNameLength < MinLength) || (displayNameLength > MaxLength))
                 {
@@ -32,9 +34,11 @@ namespace FoxyMonitor.Utils
 
             public override ValidationResult Validate(object value, CultureInfo cultureInfo)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 if (value == null || value.ToString().Trim() == string.Empty) return new ValidationResult(false, "Launcher Id can not be empty.");
 
                 var launcherId = value.ToString().Trim();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 var launcherIdLength = launcherId.Length;
 
                 if ((launcherIdLength < MinLength) || (launcherIdLength > MaxLength))

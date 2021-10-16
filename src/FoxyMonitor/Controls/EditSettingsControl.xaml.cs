@@ -12,14 +12,14 @@ namespace FoxyMonitor.Controls
     /// </summary>
     public partial class EditSettingsControl : UserControl
     {
-        private MainAppWindow ParentWindow;
+        private MainAppWindow? ParentWindow;
 
         public EditSettingsControl()
         {
             InitializeComponent();
         }
 
-        private async void CheckForUpdates(Object sender, RoutedEventArgs e)
+        private async void CheckForUpdates(object sender, RoutedEventArgs e)
         {
             //TODO: Check for updates
             await Task.CompletedTask;
@@ -81,12 +81,12 @@ namespace FoxyMonitor.Controls
         private void Logging_Changed(object sender, RoutedEventArgs e)
         {
             var radio = e.OriginalSource as RadioButton;
-            if (radio.Name == nameof(File_Logging_Radio))
+            if (radio != null && radio.Name == nameof(File_Logging_Radio))
             {
                 Properties.Settings.Default.LogToFile = true;
                 Properties.Settings.Default.Save();
             }
-            else if (radio.Name == nameof(Console_Logging_Radio))
+            else if (radio != null && radio.Name == nameof(Console_Logging_Radio))
             {
                 Properties.Settings.Default.LogToFile = false;
                 Properties.Settings.Default.ShowConsole = true;
@@ -97,6 +97,8 @@ namespace FoxyMonitor.Controls
         private void AutoUpdate_CheckChanged(object sender, RoutedEventArgs e)
         {
             var check = e.OriginalSource as CheckBox;
+
+            if (check == null || check.IsChecked == null) return;
 
             Properties.Settings.Default.AutoCheckForUpdates = (bool)check.IsChecked;
             Properties.Settings.Default.Save();

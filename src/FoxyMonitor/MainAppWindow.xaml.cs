@@ -79,14 +79,18 @@ namespace FoxyMonitor
 
             await Task.Delay(TimeSpan.FromSeconds(0.1));
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             MainAppViewModel.SelectedAccountId = (Accounts_ListView.SelectedItem as Account).Id;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             AccountsFlyout.IsOpen = false;
 
             if (SharesPlotControl != null)
             {
                 SharesPlotControl.GridOptions = MainAppViewModel.GridOptions;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 SharesPlotControl.ColumnSeries = MainAppViewModel.SelectedAccountSharesSeries;
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
 
 

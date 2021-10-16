@@ -18,7 +18,7 @@ namespace FoxyMonitor.ViewModels
 {
     public class AppViewModel : NotifyChangeBase, IDisposable
     {
-        public Account SelectedAccount
+        public Account? SelectedAccount
         {
             get
             {
@@ -34,7 +34,7 @@ namespace FoxyMonitor.ViewModels
             }
         }
 
-        public PostPoolInfo SelectedPostPoolInfo { get => _selectedPostPoolInfo; }
+        public PostPoolInfo? SelectedPostPoolInfo { get => _selectedPostPoolInfo; }
 
         public uint SelectedAccountId
         {
@@ -45,16 +45,20 @@ namespace FoxyMonitor.ViewModels
                 OnPropertyChanging(nameof(SelectedAccountSharesSeries));
                 OnPropertyChanging(nameof(SelectedAccountEstCapacitySeries));
                 _ = SetField(ref _selectedAccountId, value);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 _ = SetField(ref _selectedPostPoolInfo, PostPools.FirstOrDefault(x => x.PoolApiName.Equals(Enum.Parse(typeof(PostPool), SelectedAccount.PoolName, true))), nameof(SelectedPostPoolInfo));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 OnPropertyChanged(nameof(SelectedAccount));
                 OnPropertyChanged(nameof(SelectedAccountSharesSeries));
                 OnPropertyChanged(nameof(SelectedAccountEstCapacitySeries));
             }
         }
         private uint _selectedAccountId;
-        private PostPoolInfo _selectedPostPoolInfo;
+        private PostPoolInfo? _selectedPostPoolInfo;
 
-        public string AppVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        public static string AppVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
         public int AccountsCount { get => FmDbContext.Accounts.Count(); }
 
@@ -76,7 +80,7 @@ namespace FoxyMonitor.ViewModels
         {
             get
             {
-                if (SelectedAccount == null) return null;
+                if (SelectedAccount == null) return new ColumnSeries();
 
                 var colSeriesValues = new ObservableCollection<DateTimeDataPoint>();
 
@@ -100,7 +104,7 @@ namespace FoxyMonitor.ViewModels
         {
             get
             {
-                if (SelectedAccount == null) return null;
+                if (SelectedAccount == null) return new ColumnSeries();
 
                 var seriesValues = new ObservableCollection<DateTimeDataPoint>();
 
@@ -148,7 +152,7 @@ namespace FoxyMonitor.ViewModels
             _logger.LogDebug("New AppViewModel instance created.");
         }
 
-        private void On15SecondTimer_Tick(object state)
+        private void On15SecondTimer_Tick(object? state)
         {
             if (SelectedAccount != null)
             {

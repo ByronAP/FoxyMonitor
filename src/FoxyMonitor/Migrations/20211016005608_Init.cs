@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-
-#nullable disable
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoxyMonitor.Migrations
 {
@@ -35,6 +33,26 @@ namespace FoxyMonitor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_accounts", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "alerts",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    accountId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    level = table.Column<int>(type: "INTEGER", nullable: false),
+                    title = table.Column<string>(type: "TEXT", nullable: false),
+                    message = table.Column<string>(type: "TEXT", nullable: false),
+                    url = table.Column<string>(type: "TEXT", nullable: true),
+                    created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    viewed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    pendingDeletion = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_alerts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,32 +93,6 @@ namespace FoxyMonitor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_postPools", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "alerts",
-                columns: table => new
-                {
-                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    accountId = table.Column<uint>(type: "INTEGER", nullable: false),
-                    level = table.Column<int>(type: "INTEGER", nullable: false),
-                    title = table.Column<string>(type: "TEXT", nullable: false),
-                    message = table.Column<string>(type: "TEXT", nullable: false),
-                    url = table.Column<string>(type: "TEXT", nullable: true),
-                    created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    viewed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    pendingDeletion = table.Column<bool>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_alerts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_alerts_accounts_accountId",
-                        column: x => x.accountId,
-                        principalTable: "accounts",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

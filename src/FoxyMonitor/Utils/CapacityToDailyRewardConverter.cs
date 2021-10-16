@@ -12,6 +12,7 @@ namespace FoxyMonitor.Utils
             try
             {
                 var rewardPerPiB = ((MainAppWindow)App.Current.MainWindow).MainAppViewModel.SelectedPostPoolInfo?.DailyRewardPerPiB;
+                if (rewardPerPiB == null) rewardPerPiB = 0m;
                 return (decimal)value / 1024 / 1024 * rewardPerPiB;
             }
             catch
