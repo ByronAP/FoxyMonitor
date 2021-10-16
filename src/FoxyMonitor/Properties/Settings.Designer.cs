@@ -139,5 +139,17 @@ namespace FoxyMonitor.Properties {
                 return ((string)(this["GitHubRepoUrl"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MinimizeOnExit {
+            get {
+                return ((bool)(this["MinimizeOnExit"]));
+            }
+            set {
+                this["MinimizeOnExit"] = value;
+            }
+        }
     }
 }
