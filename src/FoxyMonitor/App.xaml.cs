@@ -16,16 +16,14 @@ namespace FoxyMonitor
 #pragma warning disable CA1001 // Types that own disposable fields should be disposable
     public partial class App : Application
     {
-        internal static Thread MainThread;
-        internal static IHost Host_Builder;
-        private Mutex _appSingletonMutex;
-        private EventWaitHandle _appEventWaitHandle;
-        private Thread _appWaitHandleThread;
+        internal static Thread? MainThread;
+        internal static IHost? Host_Builder;
+        private Mutex? _appSingletonMutex;
+        private EventWaitHandle? _appEventWaitHandle;
+        private Thread? _appWaitHandleThread;
 
         public App()
         {
-            if (!IsSingleton()) return;
-
             MainThread = Thread.CurrentThread;
 
             //Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -64,6 +62,7 @@ namespace FoxyMonitor
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<AccountUpdaterService>();
+                    services.AddHostedService<CheckForUpdatesService>();
                     services.AddHostedService<PoolInfoUpdaterService>();
                     services.AddSingleton<AppViewModel>();
                     services.AddSingleton<MainAppWindow>();
@@ -82,10 +81,10 @@ namespace FoxyMonitor
             base.OnStartup(e);
 
             var mainWindow = Host_Builder.Services.GetService<MainAppWindow>();
-            mainWindow.Show();
+            mainWindow?.Show();
         }
 
-        protected override async void OnExit(ExitEventArgs e)
+        protected override async void OnExit(ExitEventArgs? e)
         {
             //HACK: but we will flow with it
 
@@ -100,9 +99,9 @@ namespace FoxyMonitor
 
             try
             {
-                _ = _appEventWaitHandle.Set();
-                _appEventWaitHandle.Close();
-                _appEventWaitHandle.Dispose();
+                _ = _appEventWaitHandle?.Set();
+                _appEventWaitHandle?.Close();
+                _appEventWaitHandle?.Dispose();
             }
             catch
             {
@@ -153,9 +152,9 @@ namespace FoxyMonitor
                             _ = Dispatcher.BeginInvoke(new Action(() =>
                               {
                                   var mainAppWindow = (MainAppWindow)MainWindow;
-                                  mainAppWindow.BringToForeground();
+                                  mainAppWindow?.BringToForeground();
 
-                            }));
+                              }));
                         }
                     }
                     catch
@@ -165,12 +164,12 @@ namespace FoxyMonitor
                 })
                 { IsBackground = true };
 
-                _appWaitHandleThread.Start();
+                _appWaitHandleThread?.Start();
             }
             else
             {
                 // Notify other instance so it could bring itself to foreground.
-                _ = _appEventWaitHandle.Set();
+                _ = _appEventWaitHandle?.Set();
 
                 // Terminate this instance.
                 OnExit(null);

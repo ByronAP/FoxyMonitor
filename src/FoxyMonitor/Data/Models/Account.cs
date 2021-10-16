@@ -1,6 +1,5 @@
 ﻿using FoxyMonitor.Utils;
 using FoxyPoolApi;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +9,6 @@ namespace FoxyMonitor.Data.Models
 {
     // PK is built using DisplayName and the PoolType
     [Table("accounts")]
-    [Index(nameof(DisplayName), nameof(PoolName), IsUnique = true)]
     public class Account : NotifyChangeBase
     {
         [Key]
@@ -100,35 +98,29 @@ namespace FoxyMonitor.Data.Models
         /// </summary>
         [Column("distRatio")]
         public string DistributionRatio { get => _distributionRatio; set => SetField(ref _distributionRatio, value); }
-        private string _distributionRatio;
+        private string _distributionRatio = string.Empty;
 
         /// <summary>
         /// Address that payouts are sent to
         /// </summary>
         [Column("payoutAddress")]
         public string PayoutAddress { get => _payoutAddress; set => SetField(ref _payoutAddress, value); }
-        private string _payoutAddress;
+        private string _payoutAddress = string.Empty;
 
         /// <summary>
         /// The pools public key
         /// </summary>
         [Column("poolPubKey")]
         public string PoolPubKey { get => _poolPubKey; set => SetField(ref _poolPubKey, value); }
-        private string _poolPubKey;
+        private string _poolPubKey = string.Empty;
 
         /// <summary>
         /// Est Capacity and Shares history
         /// </summary>
         [Column("historicalItems")]
         public ObservableCollection<PostAccountHistoricalDbItem> PostAccountHistoricalDbItems { get => _postAccountHistoricalDbItems; set => SetField(ref _postAccountHistoricalDbItems, value); }
-        private ObservableCollection<PostAccountHistoricalDbItem> _postAccountHistoricalDbItems;
+        private ObservableCollection<PostAccountHistoricalDbItem> _postAccountHistoricalDbItems = new ObservableCollection<PostAccountHistoricalDbItem>();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [Column("alerts")]
-        public ObservableCollection<Alert> Alerts {  get => _alerts; set => SetField(ref _alerts, value); }
-        private ObservableCollection<Alert> _alerts;
 
         /// <summary>
         /// The last time this accounts data was updated from the pool server

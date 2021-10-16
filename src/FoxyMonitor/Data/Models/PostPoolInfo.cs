@@ -21,19 +21,19 @@ namespace FoxyMonitor.Data.Models
 
         [Column("poolUrl")]
         public string PoolUrl { get => _poolUrl; set => SetField(ref _poolUrl, value); }
-        private string _poolUrl;
+        private string _poolUrl = string.Empty;
 
         [Column("blockExplorerBlockUrlTemplate")]
         public string BlockExplorerBlockUrlTemplate { get => _blockExplorerBlockUrlTemplate; set => SetField(ref _blockExplorerBlockUrlTemplate, value); }
-        private string _blockExplorerBlockUrlTemplate;
+        private string _blockExplorerBlockUrlTemplate = string.Empty;
 
         [Column("blockExplorerCoinUrlTemplate")]
         public string BlockExplorerCoinUrlTemplate { get => _blockExplorerCoinUrlTemplate; set => SetField(ref _blockExplorerCoinUrlTemplate, value); }
-        private string _blockExplorerCoinUrlTemplate;
+        private string _blockExplorerCoinUrlTemplate = string.Empty;
 
         [Column("blockExplorerAddressUrlTemplate")]
         public string BlockExplorerAddressUrlTemplate { get => _blockExplorerAddressUrlTemplate; set => SetField(ref _blockExplorerAddressUrlTemplate, value); }
-        private string _blockExplorerAddressUrlTemplate;
+        private string _blockExplorerAddressUrlTemplate = string.Empty;
 
         [Column("blockRewardDistributionDelay")]
         public uint BlockRewardDistributionDelay { get => _blockRewardDistributionDelay; set => SetField(ref _blockRewardDistributionDelay, value); }
@@ -45,7 +45,7 @@ namespace FoxyMonitor.Data.Models
 
         [Column("defaultDistributionRatio")]
         public string DefaultDistributionRatio { get => _defaultDistributionRatio; set => SetField(ref _defaultDistributionRatio, value); }
-        private string _defaultDistributionRatio;
+        private string _defaultDistributionRatio = string.Empty;
 
         [Column("historicalTimeInMinutes")]
         public uint HistoricalTimeInMinutes { get => _historicalTimeMinutes; set => SetField(ref _historicalTimeMinutes, value); }
@@ -65,15 +65,15 @@ namespace FoxyMonitor.Data.Models
 
         [Column("coin")]
         public string Coin { get => _coin; set => SetField(ref _coin, value); }
-        private string _coin;
+        private string _coin = string.Empty;
 
         [Column("ticker")]
         public string Ticker { get => _ticker; set => SetField(ref _ticker, value); }
-        private string _ticker;
+        private string _ticker = string.Empty;
 
         [Column("version")]
         public string Version { get => _version; set => SetField(ref _version, value); }
-        private string _version;
+        private string _version = string.Empty;
 
         [Column("isTestnet")]
         public bool IsTestnet { get => _isTestnet; set => SetField(ref _isTestnet, value); }
@@ -81,15 +81,15 @@ namespace FoxyMonitor.Data.Models
 
         [Column("poolAddress")]
         public string PoolAddress { get => _poolAddress; set => SetField(ref _poolAddress, value); }
-        private string _poolAddress;
+        private string _poolAddress = string.Empty;
 
         [Column("poolName")]
         public string PoolName { get => _poolName; set => SetField(ref _poolName, value); }
-        private string _poolName;
+        private string _poolName = string.Empty;
 
         [Column("farmingUrl")]
         public string FarmingUrl { get => _farmingUrl; set => SetField(ref _farmingUrl, value); }
-        private string _farmingUrl;
+        private string _farmingUrl = string.Empty;
 
         [Column("height")]
         public ulong Height { get => _height; set => SetField(ref _height, value); }
@@ -105,11 +105,11 @@ namespace FoxyMonitor.Data.Models
 
         [Column("networkSpaceInTiB")]
         public string NetworkSpaceInTiB { get => _networkSpaceInTiB; set => SetField(ref _networkSpaceInTiB, value); }
-        private string _networkSpaceInTiB;
+        private string _networkSpaceInTiB = string.Empty;
 
         [Column("balance")]
         public string Balance { get => _balance; set => SetField(ref _balance, value); }
-        private string _balance;
+        private string _balance = string.Empty;
 
         [Column("avgEffort")]
         public decimal AverageEffort { get => _averageEffort; set => SetField(ref _averageEffort, value); }
@@ -131,6 +131,7 @@ namespace FoxyMonitor.Data.Models
 
         public static PostPoolInfo FromApiData(PostConfigResponse config, PostPoolResponse pool, PostRewardsResponse rewards, DateTimeOffset lastPayoutTime)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             return new PostPoolInfo
             {
                 PoolUrl = config.PoolUrl,
@@ -160,10 +161,12 @@ namespace FoxyMonitor.Data.Models
                 DailyRewardPerPiB = rewards.DailyRewardPerPiB,
                 LastPayoutTime = lastPayoutTime
             };
+#pragma warning restore CS8601 // Possible null reference assignment.
         }
 
         public void UpdateFromApiData(PostConfigResponse config, PostPoolResponse pool, PostRewardsResponse rewards, DateTimeOffset lastPayoutTime)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             PoolUrl = config.PoolUrl;
             BlockExplorerBlockUrlTemplate = config.BlockExplorerBlockUrlTemplate;
             BlockExplorerCoinUrlTemplate = config.BlockExplorerCoinUrlTemplate;
@@ -190,6 +193,7 @@ namespace FoxyMonitor.Data.Models
             AverageEffort = rewards.AverageEffort;
             DailyRewardPerPiB = rewards.DailyRewardPerPiB;
             LastPayoutTime = lastPayoutTime;
+#pragma warning restore CS8601 // Possible null reference assignment.
         }
     }
 }

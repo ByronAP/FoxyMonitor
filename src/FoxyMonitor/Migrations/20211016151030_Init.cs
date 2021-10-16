@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace FoxyMonitor.Migrations
 {
     public partial class Init : Migration
@@ -17,9 +15,9 @@ namespace FoxyMonitor.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     displayName = table.Column<string>(type: "TEXT", nullable: false),
                     poolType = table.Column<int>(type: "INTEGER", nullable: false),
-                    poolName = table.Column<string>(type: "TEXT", nullable: true),
+                    poolName = table.Column<string>(type: "TEXT", nullable: false),
                     launcherId = table.Column<string>(type: "TEXT", nullable: false),
-                    authToken = table.Column<string>(type: "TEXT", nullable: true),
+                    authToken = table.Column<string>(type: "TEXT", nullable: false),
                     lastBlockWon = table.Column<ulong>(type: "INTEGER", nullable: false),
                     lastAcceptedPartialTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     pendingBalance = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -27,54 +25,14 @@ namespace FoxyMonitor.Migrations
                     estCapacity = table.Column<decimal>(type: "TEXT", nullable: false),
                     collateral = table.Column<decimal>(type: "TEXT", nullable: false),
                     difficulty = table.Column<uint>(type: "INTEGER", nullable: false),
-                    distRatio = table.Column<string>(type: "TEXT", nullable: true),
-                    payoutAddress = table.Column<string>(type: "TEXT", nullable: true),
-                    poolPubKey = table.Column<string>(type: "TEXT", nullable: true),
+                    distRatio = table.Column<string>(type: "TEXT", nullable: false),
+                    payoutAddress = table.Column<string>(type: "TEXT", nullable: false),
+                    poolPubKey = table.Column<string>(type: "TEXT", nullable: false),
                     lastUpdated = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_accounts", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "postPools",
-                columns: table => new
-                {
-                    id = table.Column<uint>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    poolApiName = table.Column<int>(type: "INTEGER", nullable: false),
-                    poolUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    blockExplorerBlockUrlTemplate = table.Column<string>(type: "TEXT", nullable: true),
-                    blockExplorerCoinUrlTemplate = table.Column<string>(type: "TEXT", nullable: true),
-                    blockExplorerAddressUrlTemplate = table.Column<string>(type: "TEXT", nullable: true),
-                    blockRewardDistributionDelay = table.Column<uint>(type: "INTEGER", nullable: false),
-                    blocksPerDay = table.Column<uint>(type: "INTEGER", nullable: false),
-                    defaultDistributionRatio = table.Column<string>(type: "TEXT", nullable: true),
-                    historicalTimeInMinutes = table.Column<uint>(type: "INTEGER", nullable: false),
-                    minimumPayout = table.Column<decimal>(type: "TEXT", nullable: false),
-                    onDemandPayoutFee = table.Column<decimal>(type: "TEXT", nullable: false),
-                    poolFee = table.Column<decimal>(type: "TEXT", nullable: false),
-                    coin = table.Column<string>(type: "TEXT", nullable: true),
-                    ticker = table.Column<string>(type: "TEXT", nullable: true),
-                    version = table.Column<string>(type: "TEXT", nullable: true),
-                    isTestnet = table.Column<bool>(type: "INTEGER", nullable: false),
-                    poolAddress = table.Column<string>(type: "TEXT", nullable: true),
-                    poolName = table.Column<string>(type: "TEXT", nullable: true),
-                    farmingUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    height = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    difficulty = table.Column<uint>(type: "INTEGER", nullable: false),
-                    receivedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    networkSpaceInTiB = table.Column<string>(type: "TEXT", nullable: true),
-                    balance = table.Column<string>(type: "TEXT", nullable: true),
-                    avgEffort = table.Column<decimal>(type: "TEXT", nullable: false),
-                    dailyRewardPerPiB = table.Column<decimal>(type: "TEXT", nullable: false),
-                    lastPayoutTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    lastUpdated = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_postPools", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,7 +45,7 @@ namespace FoxyMonitor.Migrations
                     level = table.Column<int>(type: "INTEGER", nullable: false),
                     title = table.Column<string>(type: "TEXT", nullable: false),
                     message = table.Column<string>(type: "TEXT", nullable: false),
-                    url = table.Column<string>(type: "TEXT", nullable: true),
+                    url = table.Column<string>(type: "TEXT", nullable: false),
                     created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     viewed = table.Column<bool>(type: "INTEGER", nullable: false),
                     pendingDeletion = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -95,12 +53,46 @@ namespace FoxyMonitor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_alerts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_alerts_accounts_accountId",
-                        column: x => x.accountId,
-                        principalTable: "accounts",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "postPools",
+                columns: table => new
+                {
+                    id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    poolApiName = table.Column<int>(type: "INTEGER", nullable: false),
+                    poolUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    blockExplorerBlockUrlTemplate = table.Column<string>(type: "TEXT", nullable: false),
+                    blockExplorerCoinUrlTemplate = table.Column<string>(type: "TEXT", nullable: false),
+                    blockExplorerAddressUrlTemplate = table.Column<string>(type: "TEXT", nullable: false),
+                    blockRewardDistributionDelay = table.Column<uint>(type: "INTEGER", nullable: false),
+                    blocksPerDay = table.Column<uint>(type: "INTEGER", nullable: false),
+                    defaultDistributionRatio = table.Column<string>(type: "TEXT", nullable: false),
+                    historicalTimeInMinutes = table.Column<uint>(type: "INTEGER", nullable: false),
+                    minimumPayout = table.Column<decimal>(type: "TEXT", nullable: false),
+                    onDemandPayoutFee = table.Column<decimal>(type: "TEXT", nullable: false),
+                    poolFee = table.Column<decimal>(type: "TEXT", nullable: false),
+                    coin = table.Column<string>(type: "TEXT", nullable: false),
+                    ticker = table.Column<string>(type: "TEXT", nullable: false),
+                    version = table.Column<string>(type: "TEXT", nullable: false),
+                    isTestnet = table.Column<bool>(type: "INTEGER", nullable: false),
+                    poolAddress = table.Column<string>(type: "TEXT", nullable: false),
+                    poolName = table.Column<string>(type: "TEXT", nullable: false),
+                    farmingUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    height = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    difficulty = table.Column<uint>(type: "INTEGER", nullable: false),
+                    receivedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    networkSpaceInTiB = table.Column<string>(type: "TEXT", nullable: false),
+                    balance = table.Column<string>(type: "TEXT", nullable: false),
+                    avgEffort = table.Column<decimal>(type: "TEXT", nullable: false),
+                    dailyRewardPerPiB = table.Column<decimal>(type: "TEXT", nullable: false),
+                    lastPayoutTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    lastUpdated = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_postPools", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,12 +118,6 @@ namespace FoxyMonitor.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_accounts_displayName_poolName",
-                table: "accounts",
-                columns: new[] { "displayName", "poolName" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_alerts_accountId",

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FoxyMonitor.Data.Models
 {
     [Table("alerts")]
+    [Index(nameof(AccountId), IsUnique = false)]
     [Index(nameof(PendingDeletion), IsUnique = false)]
     [Index(nameof(Viewed), IsUnique = false)]
     public class Alert : NotifyChangeBase

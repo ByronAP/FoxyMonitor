@@ -1,10 +1,8 @@
-﻿using FoxyMonitor.Data;
-using FoxyMonitor.Data.Models;
+﻿using FoxyMonitor.Data.Models;
 using FoxyPoolApi;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
@@ -18,7 +16,7 @@ namespace FoxyMonitor.Controls
     /// </summary>
     public partial class AddAccountControl : UserControl
     {
-        private MainAppWindow ParentWindow;
+        private MainAppWindow? ParentWindow;
 
         public AddAccountControl()
         {
@@ -103,11 +101,16 @@ namespace FoxyMonitor.Controls
                         }
                         catch (Exception ex)
                         {
-                            ParentWindow.Logger.LogError(ex, "Failed to create new account historical entries, possible api failure.");
+                            ParentWindow?.Logger.LogError(ex, "Failed to create new account historical entries, possible api failure.");
                         }
 
                         try
                         {
+                            if (ParentWindow == null)
+                            {
+                                // nothing we can do, can't even log it since parentwindow has the logger
+                                return;
+                            }
                             await ParentWindow.MainAppViewModel.AppViewDispatcher.InvokeAsync(async () =>
                             {
                                 var fmDbContext = ParentWindow.MainAppViewModel.FmDbContext;
@@ -132,18 +135,18 @@ namespace FoxyMonitor.Controls
                         }
                         catch (Exception ex)
                         {
-                            ParentWindow.Logger.LogError(ex, "Failed to save new account to db.");
+                            ParentWindow?.Logger.LogError(ex, "Failed to save new account to db.");
                         }
                         finally
                         {
-                            ParentWindow.Logger.LogInformation("Created new account {Id}", newAccount.Id);
+                            ParentWindow?.Logger.LogInformation("Created new account {Id}", newAccount.Id);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ParentWindow.Logger.LogError(ex, "Failed to create new account instance, possible api failure.");
+                ParentWindow?.Logger.LogError(ex, "Failed to create new account instance, possible api failure.");
 
                 TestLauncherId_Button.IsEnabled = false;
                 DisplayName_Input.IsEnabled = false;
@@ -162,6 +165,12 @@ namespace FoxyMonitor.Controls
 
         private async void TestLauncherId_Click(object sender, RoutedEventArgs e)
         {
+            if (ParentWindow == null)
+            {
+                // nothing we can do, can't even log it since parentwindow has the logger
+                return;
+            }
+
             var progressDialog = await ParentWindow.ShowProgressAsync("Please wait...", "Validating Launcher Id", false);
 
             try
@@ -202,7 +211,7 @@ namespace FoxyMonitor.Controls
             }
             catch (Exception ex)
             {
-                ParentWindow.Logger.LogError(ex, "Failed to validate Launcher Id");
+                ParentWindow?.Logger.LogError(ex, "Failed to validate Launcher Id");
                 DisplayName_Input.IsEnabled = false;
                 AuthToken_Input.IsEnabled = false;
                 SaveAccount_Button.IsEnabled = false;
@@ -212,7 +221,14 @@ namespace FoxyMonitor.Controls
             }
             finally
             {
-                await progressDialog.CloseAsync();
+                try
+                {
+                    await progressDialog.CloseAsync();
+                }
+                catch
+                {
+                    // ignore
+                }
             }
         }
 
@@ -233,8 +249,13 @@ namespace FoxyMonitor.Controls
             var validationResult = launcherIdValidator.Validate(value, CultureInfo.InvariantCulture);
             if (!validationResult.IsValid)
             {
-                LauncherId_Input.ErrorText = validationResult.ErrorContent.ToString();
-                LauncherId_Input.ErrorVisibility = Visibility.Visible;
+                if (validationResult.ErrorContent != null)
+                {
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    LauncherId_Input.ErrorText = validationResult.ErrorContent.ToString();
+#pragma warning restore CS8601 // Possible null reference assignment.
+                    LauncherId_Input.ErrorVisibility = Visibility.Visible;
+                }
             }
             else
             {

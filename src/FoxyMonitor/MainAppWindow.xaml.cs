@@ -1,12 +1,10 @@
 ﻿using FoxyMonitor.Data.Models;
 using FoxyMonitor.ViewModels;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Extensions.Logging;
 using SplotControl.Models;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,11 +27,10 @@ namespace FoxyMonitor
             DataContext = MainAppViewModel;
             InitializeComponent();
 
-            var foregroundBrush = Foreground as SolidColorBrush;
-            appViewModel.ChartBrush = Foreground;
+            appViewModel.ChartBrush = EC_Chart_Tile.Foreground;
             appViewModel.GridOptions = new GridOptions
             {
-                GridBrush = new SolidColorBrush(Color.FromArgb(40, foregroundBrush.Color.R, foregroundBrush.Color.G, foregroundBrush.Color.B)),
+                GridBrush = new SolidColorBrush(Color.FromArgb(40, 200, 200, 200)),
                 GridLineWidth = 2,
                 FontSize = 8,
                 GridLineCount = 6
@@ -46,7 +43,7 @@ namespace FoxyMonitor
             e.Handled = true;
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        internal void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             _ = Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
             e.Handled = true;
@@ -70,31 +67,6 @@ namespace FoxyMonitor
             e.Handled = true;
         }
 
-        private async void DeleteLogs_Click(object sender, RoutedEventArgs e)
-        {
-            var dialogResult = await DialogManager.ShowMessageAsync(this, "Confirm Delete", "Delete all log files?", MessageDialogStyle.AffirmativeAndNegative);
-
-            if (dialogResult == MessageDialogResult.Affirmative)
-            {
-                var logFiles = Directory.GetFiles(Utils.IOUtils.GetLoggingDirectory());
-                var delCount = 0;
-                foreach (var logFile in logFiles)
-                {
-                    try
-                    {
-                        File.Delete(logFile);
-                        delCount++;
-                    }
-                    catch
-                    {
-                        // ignore because we can not and will not delete the current log file
-                    }
-                }
-                _ = await DialogManager.ShowMessageAsync(this, "Complete", $"Deleted {delCount} log archive files.", MessageDialogStyle.Affirmative);
-            }
-            e.Handled = true;
-        }
-
         private async void Accounts_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var opacityAnimationIn = new DoubleAnimation(1, 0.2, TimeSpan.FromSeconds(0.2));
@@ -107,14 +79,18 @@ namespace FoxyMonitor
 
             await Task.Delay(TimeSpan.FromSeconds(0.1));
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             MainAppViewModel.SelectedAccountId = (Accounts_ListView.SelectedItem as Account).Id;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             AccountsFlyout.IsOpen = false;
 
             if (SharesPlotControl != null)
             {
                 SharesPlotControl.GridOptions = MainAppViewModel.GridOptions;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 SharesPlotControl.ColumnSeries = MainAppViewModel.SelectedAccountSharesSeries;
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
 
 

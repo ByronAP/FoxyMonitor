@@ -9,13 +9,17 @@ namespace FoxyMonitor.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return "Error";
+
+#pragma warning disable CS8604 // Possible null reference argument.
             var tibValue = decimal.Parse(value.ToString());
+#pragma warning restore CS8604 // Possible null reference argument.
             var pibValue = tibValue / 1024;
             var eibValue = pibValue / 1024;
 
-            if(eibValue > 1) return $"{eibValue:N3} EiB";
-            
-            if(pibValue >  1) return $"{pibValue:N3} PiB";
+            if (eibValue > 1) return $"{eibValue:N3} EiB";
+
+            if (pibValue > 1) return $"{pibValue:N3} PiB";
 
             return $"{tibValue:N3} TiB";
 
