@@ -9,7 +9,7 @@
       <Value Profile="(Default)">Auto</Value>
     </Setting>
     <Setting Name="ShowConsole" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LogLevel" Type="Microsoft.Extensions.Logging.LogLevel" Scope="User">
       <Value Profile="(Default)">Information</Value>
@@ -30,7 +30,7 @@
       <Value Profile="(Default)">01/01/2021 01:00:00 +00:00</Value>
     </Setting>
     <Setting Name="GitHubRepoUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://api.github.com/repos/ByronAP/FoxyPoolApi</Value>
+      <Value Profile="(Default)">https://api.github.com/repos/ByronAP/FoxyMonitor</Value>
     </Setting>
   </Settings>
 </SettingsFile>

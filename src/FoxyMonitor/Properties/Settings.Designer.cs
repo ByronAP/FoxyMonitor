@@ -49,7 +49,7 @@ namespace FoxyMonitor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ShowConsole {
             get {
                 return ((bool)(this["ShowConsole"]));
@@ -133,7 +133,7 @@ namespace FoxyMonitor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/ByronAP/FoxyPoolApi")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/ByronAP/FoxyMonitor")]
         public string GitHubRepoUrl {
             get {
                 return ((string)(this["GitHubRepoUrl"]));
