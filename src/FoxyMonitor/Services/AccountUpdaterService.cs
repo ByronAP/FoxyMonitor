@@ -1,5 +1,6 @@
-﻿using FoxyMonitor.Data.Models;
-using FoxyMonitor.ViewModels;
+﻿using FoxyMonitor.Contracts.Services;
+using FoxyMonitor.DbContexts;
+using FoxyMonitor.Models;
 using FoxyPoolApi;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,38 +12,58 @@ using System.Threading.Tasks;
 
 namespace FoxyMonitor.Services
 {
-    internal class AccountUpdaterService : IHostedService, IDisposable
+    public class AccountUpdaterService : IHostedService
     {
+        private const string AccountsUpdateIntervalPropertyKeyName = "AccountsUpdateInterval";
+        private readonly ApplicationPropertiesService _appPropertiesService;
+        private readonly AppDbContext _appDbContext;
         private readonly ILogger<AccountUpdaterService> _logger;
-        private readonly AppViewModel _appViewModel;
         private readonly SemaphoreSlim _semaphore;
-        private Timer? _timer;
+        private Timer _timer;
         private int _executionCount;
-        private bool _disposedValue;
+        private TimeSpan _interval;
 
-        public AccountUpdaterService(AppViewModel appViewModel, ILogger<AccountUpdaterService> logger)
+        public AccountUpdaterService(IApplicationPropertiesService appPropertiesService, AppDbContext appDbContext, ILogger<AccountUpdaterService> logger)
         {
+            _appPropertiesService = (ApplicationPropertiesService)appPropertiesService;
+            _appDbContext = appDbContext;
             _logger = logger;
-            _appViewModel = appViewModel;
             _semaphore = new SemaphoreSlim(1);
-            Properties.Settings.Default.PropertyChanged += Settings_PropertyChanged;
+
+            if (appPropertiesService.Contains(AccountsUpdateIntervalPropertyKeyName))
+            {
+                _interval = TimeSpan.FromSeconds(appPropertiesService.GetProperty<uint>(AccountsUpdateIntervalPropertyKeyName));
+            }
+            else
+            {
+                _interval = TimeSpan.FromSeconds(30);
+            }
+
+            _appPropertiesService.PropertyChanged += ApplicationPropertiesService_PropertyChanged;
         }
 
-        private void Settings_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
+        private void ApplicationPropertiesService_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_timer != null && e?.PropertyName == nameof(Properties.Settings.Default.AccountsUpdateInterval))
-            {
-                _timer.Change(Properties.Settings.Default.AccountsUpdateInterval, Properties.Settings.Default.AccountsUpdateInterval);
+            if (_timer == null || e.PropertyName != AccountsUpdateIntervalPropertyKeyName) return;
 
-                _logger.LogInformation("Account updater interval changed to {NewInterval}", Properties.Settings.Default.AccountsUpdateInterval);
+            var newInterval = TimeSpan.FromSeconds(_appPropertiesService.GetProperty<uint>(AccountsUpdateIntervalPropertyKeyName));
+
+            if (_interval != newInterval)
+            {
+                _timer.Change(newInterval, newInterval);
+
+                _interval = newInterval;
+
+                _logger.LogInformation("Account updater interval changed to {NewInterval}", newInterval);
             }
+
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Account updater service running.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(6), Properties.Settings.Default.AccountsUpdateInterval);
+            _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(6), _interval);
 
             return Task.CompletedTask;
         }
@@ -56,167 +77,236 @@ namespace FoxyMonitor.Services
             return Task.CompletedTask;
         }
 
-        private async void DoWork(object? state)
+        private async void DoWork(object state)
         {
             try
             {
+                // we use this semaphore to make sure even if a run takes a long time we cant overlap
                 await _semaphore.WaitAsync();
 
-                // do our work on the same thread as the dbcontext
-                await _appViewModel.AppViewDispatcher.InvokeAsync(new Action(async () =>
+                foreach (var account in _appDbContext.Accounts)
                 {
-                    foreach (var account in _appViewModel.Accounts)
+                    if (account.PoolType == PoolType.POST)
                     {
-                        if (account.PoolType == PoolType.POST)
+                        try
                         {
-                            try
+                            using var postApiClient = new PostApiClient((PostPool)Enum.Parse(typeof(PostPool), account.PoolName, true));
+                            var accountData = await postApiClient.GetAccountAsync(account.LauncherId);
+                            if (accountData != null)
                             {
-                                using var postApiClient = new PostApiClient((PostPool)Enum.Parse(typeof(PostPool), account.PoolName, true));
-                                var accountData = await postApiClient.GetAccountAsync(account.LauncherId);
-                                if (accountData != null)
+                                var pool = _appDbContext.PostPools.FirstOrDefault(x => x.PoolApiName.Equals(Enum.Parse(typeof(PostPool), account.PoolName, true)));
+                                var poolName = pool == null ? account.PoolName : pool.PoolName.Replace("Foxy-Pool ", "");
+
+                                if (accountData.PoolPublicKey != null && account.PoolPubKey != accountData.PoolPublicKey)
                                 {
-                                    if (accountData.PoolPublicKey != null && account.PoolPubKey != accountData.PoolPublicKey)
+                                    var hasExistingAlert = _appDbContext.Alerts.Where(x => x.AccountId == account.Id && x.AlertType == AlertType.PoolPubKeyChange).Any();
+                                    if (!hasExistingAlert)
                                     {
-                                        account.PoolPubKey = accountData.PoolPublicKey;
-                                        // TODO: Issue an alert
-                                    }
-
-                                    if (accountData.PayoutAddress != null && account.PayoutAddress != accountData.PayoutAddress)
-                                    {
-                                        account.PayoutAddress = accountData.PayoutAddress;
-                                        // TODO: Issue an alert
-                                    }
-
-                                    if (account.Shares != accountData.Shares)
-                                    {
-                                        account.Shares = accountData.Shares;
-                                    }
-
-                                    if (account.LastAcceptedPartialTime != accountData.LastAcceptedPartialAt)
-                                    {
-                                        account.LastAcceptedPartialTime = accountData.LastAcceptedPartialAt;
-                                    }
-
-                                    if (account.EstCapacity != accountData.Ec)
-                                    {
-                                        account.EstCapacity = accountData.Ec;
-                                    }
-
-                                    if (accountData.DistributionRatio != null && account.DistributionRatio != accountData.DistributionRatio)
-                                    {
-                                        account.DistributionRatio = accountData.DistributionRatio;
-                                    }
-
-                                    if (accountData.Name != null && account.DisplayName != accountData.Name)
-                                    {
-                                        account.DisplayName = accountData.Name;
-                                    }
-
-                                    if (account.Difficulty != accountData.Difficulty)
-                                    {
-                                        account.Difficulty = accountData.Difficulty;
-                                    }
-
-                                    if (decimal.TryParse(accountData.Collateral, out var collateral))
-                                    {
-                                        account.Collateral = collateral;
-                                    }
-
-                                    if (decimal.TryParse(accountData.Pending, out var pending))
-                                    {
-                                        account.PendingBalance = pending;
-                                    }
-
-                                    try
-                                    {
-                                        var historicalData = await postApiClient.GetAccountHistoricalAsync(account.LauncherId);
-                                        if (historicalData != null)
+                                        var newAlert = new Alert
                                         {
-                                            foreach (var item in historicalData)
+                                            AlertType = AlertType.PoolPubKeyChange,
+                                            AccountId = account.Id,
+                                            Created = Convert.ToUInt64(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()),
+                                            Level = LogLevel.Critical,
+                                            Title = $"{poolName} Pool Public Key Changed",
+                                            Message = $"The public pool key for {poolName} {account.DisplayName} does not match the local record. {account.PoolPubKey} changed to {accountData.PoolPublicKey}. Plesase verify this change with the pool operator."
+                                        };
+
+                                        App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
+
+                                        //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
+                                    }
+
+                                    account.PoolPubKey = accountData.PoolPublicKey;
+                                }
+
+                                if (accountData.PayoutAddress != null && account.PayoutAddress != accountData.PayoutAddress)
+                                {
+                                    var hasExistingAlert = _appDbContext.Alerts.Where(x => x.AccountId == account.Id && x.AlertType == AlertType.PayoutAddressChange).Any();
+                                    if (!hasExistingAlert)
+                                    {
+                                        var newAlert = new Alert
+                                        {
+                                            AlertType = AlertType.PayoutAddressChange,
+                                            AccountId = account.Id,
+                                            Created = Convert.ToUInt64(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()),
+                                            Level = LogLevel.Critical,
+                                            Title = $"{poolName} Payout Address Changed",
+                                            Message = $"The payout address for {poolName} {account.DisplayName} changed. {account.PayoutAddress} changed to {accountData.PayoutAddress}. Plesase verify you made this change."
+                                        };
+
+                                        App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
+
+                                        //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
+
+                                    }
+
+                                    account.PayoutAddress = accountData.PayoutAddress;
+                                }
+
+                                if (account.Shares != accountData.Shares)
+                                {
+                                    account.Shares = accountData.Shares;
+                                }
+
+                                if (account.LastAcceptedPartialTime != Convert.ToUInt64(accountData.LastAcceptedPartialAt.ToUnixTimeMilliseconds()))
+                                {
+                                    var hasExistingAlert = _appDbContext.Alerts.Where(x => x.AccountId == account.Id && x.AlertType == AlertType.SlowPartials).Any();
+                                    if (hasExistingAlert)
+                                    {
+                                        var alert = _appDbContext.Alerts.FirstOrDefault(x => x.AccountId == account.Id && x.AlertType == AlertType.SlowPartials);
+                                        if (alert != null)
+                                        {
+                                            App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Remove(alert));
+                                        }
+                                    }
+                                    account.LastAcceptedPartialTime = Convert.ToUInt64(accountData.LastAcceptedPartialAt.ToUnixTimeMilliseconds());
+                                }
+                                else if (account.AlertOnSlowPartials)
+                                {
+                                    var diff = DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(account.LastAcceptedPartialTime));
+                                    if (diff >= account.MaxPartialTime)
+                                    {
+                                        var hasExistingAlert = _appDbContext.Alerts.Where(x => x.AccountId == account.Id && x.AlertType == AlertType.SlowPartials).Any();
+                                        if (!hasExistingAlert)
+                                        {
+                                            var newAlert = new Alert
                                             {
-                                                try
+                                                AlertType = AlertType.SlowPartials,
+                                                AccountId = account.Id,
+                                                Created = Convert.ToUInt64(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()),
+                                                Level = LogLevel.Critical,
+                                                Title = $"{poolName} Slow Partials",
+                                                Message = $"{poolName} {account.DisplayName} has not had an accepted partial in {diff.TotalMinutes:F2} minutes."
+                                            };
+
+                                            App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
+
+                                            //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
+                                        }
+                                    }
+                                }
+
+                                if (account.EstCapacity != accountData.Ec)
+                                {
+                                    account.EstCapacity = accountData.Ec;
+                                }
+
+                                if (accountData.DistributionRatio != null && account.DistributionRatio != accountData.DistributionRatio)
+                                {
+                                    account.DistributionRatio = accountData.DistributionRatio;
+                                }
+
+                                if (accountData.Name != null && account.DisplayName != accountData.Name)
+                                {
+                                    account.DisplayName = accountData.Name;
+                                }
+
+                                if (account.Difficulty != accountData.Difficulty)
+                                {
+                                    account.Difficulty = accountData.Difficulty;
+                                }
+
+                                if (decimal.TryParse(accountData.Collateral, out var collateral))
+                                {
+                                    account.Collateral = collateral;
+                                }
+
+                                if (decimal.TryParse(accountData.Pending, out var pending))
+                                {
+                                    account.PendingBalance = pending;
+                                }
+
+                                try
+                                {
+                                    var historicalData = await postApiClient.GetAccountHistoricalAsync(account.LauncherId);
+                                    if (historicalData != null)
+                                    {
+                                        foreach (var item in historicalData)
+                                        {
+                                            try
+                                            {
+                                                if (!account.PostAccountHistoricalDbItems.Any(x => x.CreatedAt.Equals(item.CreatedAt)))
                                                 {
-                                                    if (!account.PostAccountHistoricalDbItems.Any(x => x.CreatedAt.Equals(item.CreatedAt)))
-                                                    {
-                                                        account.PostAccountHistoricalDbItems.Add(PostAccountHistoricalDbItem.FromApiItem(item));
-                                                    }
-                                                    else
-                                                    {
-                                                        // make sure nothing has changed for the given point
-                                                        var record = account.PostAccountHistoricalDbItems.First(x => x.CreatedAt.Equals(item.CreatedAt));
-                                                        if (record.ShareCount != item.ShareCount)
-                                                        {
-                                                            record.ShareCount = item.ShareCount;
-                                                        }
-
-                                                        if (record.Difficulty != item.Difficulty)
-                                                        {
-                                                            record.Difficulty = item.Difficulty;
-                                                        }
-
-                                                        if (record.EstCapacity != item.Ec)
-                                                        {
-                                                            record.EstCapacity = item.Ec;
-                                                        }
-
-                                                        if (record.Shares != item.Shares)
-                                                        {
-                                                            record.Shares = item.Shares;
-                                                        }
-                                                    }
+                                                    account.PostAccountHistoricalDbItems.Add(PostAccountHistoricalDbItem.FromApiItem(item));
                                                 }
-                                                catch (Exception ex)
+                                                else
                                                 {
-                                                    _logger.LogError(ex, "Exception thrown while updating account historical item account: {Id}, created: {Created}, ec: {Ec}.", account.Id, item.CreatedAt, item.Ec);
+                                                    // make sure nothing has changed for the given point
+                                                    var record = account.PostAccountHistoricalDbItems.First(x => x.CreatedAt.Equals(item.CreatedAt));
+                                                    if (record.ShareCount != item.ShareCount)
+                                                    {
+                                                        record.ShareCount = item.ShareCount;
+                                                    }
+
+                                                    if (record.Difficulty != item.Difficulty)
+                                                    {
+                                                        record.Difficulty = item.Difficulty;
+                                                    }
+
+                                                    if (record.EstCapacity != item.Ec)
+                                                    {
+                                                        record.EstCapacity = item.Ec;
+                                                    }
+
+                                                    if (record.Shares != item.Shares)
+                                                    {
+                                                        record.Shares = item.Shares;
+                                                    }
                                                 }
                                             }
+                                            catch (Exception ex)
+                                            {
+                                                _logger.LogError(ex, "Exception thrown while updating account historical item account: {Id}, created: {Created}, ec: {Ec}.", account.Id, item.CreatedAt, item.Ec);
+                                            }
                                         }
-                                        else
-                                        {
-                                            _logger.LogWarning("Account updater failed to retrieve account historical data from api for account {Id}.", account.Id);
-                                        }
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        _logger.LogError(ex, "Exception thrown while updating historicals for account {Id}.", account.Id);
-                                    }
-
-                                    account.LastUpdated = DateTimeOffset.UtcNow;
-
-                                    try
-                                    {
-                                        _ = await _appViewModel.FmDbContext.SaveChangesAsync();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.LogError(ex, "Exception thrown while updating account {Id} to db.", account.Id);
+                                        _logger.LogWarning("Account updater failed to retrieve account historical data from api for account {Id}.", account.Id);
                                     }
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    _logger.LogWarning("Account updater failed to retrieve account data from api for account {Id}.", account.Id);
+                                    _logger.LogError(ex, "Exception thrown while updating historicals for account {Id}.", account.Id);
+                                }
+
+                                account.LastUpdated = Convert.ToUInt64(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+
+                                try
+                                {
+                                    await App.Current.Dispatcher.InvokeAsync(() => _appDbContext.SaveChanges());
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "Exception thrown while updating account {Id} to db.", account.Id);
                                 }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                _logger.LogError(ex, "Exception thrown while updating account {Id}.", account.Id);
+                                _logger.LogWarning("Account updater failed to retrieve account data from api for account {Id}.", account.Id);
                             }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            // POC NOT YET SUPPORTED
+                            _logger.LogError(ex, "Exception thrown while updating account {Id}.", account.Id);
                         }
                     }
+                    else
+                    {
+                        // POC NOT YET SUPPORTED
+                    }
+                }
 
-                    try
-                    {
-                        _ = await _appViewModel.FmDbContext.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Exception thrown while saving to db.");
-                    }
-                }));
+                try
+                {
+                    await App.Current.Dispatcher.InvokeAsync(() => _appDbContext.SaveChangesAsync());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Exception thrown while saving to db.");
+                }
+
                 var count = Interlocked.Increment(ref _executionCount);
 
                 _logger.LogInformation("Account updater service completed a round. Count: {Count}", count);
@@ -229,33 +319,6 @@ namespace FoxyMonitor.Services
             {
                 _ = _semaphore.Release();
             }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    try
-                    {
-                        _timer?.Dispose();
-                    }
-                    catch
-                    {
-                        // ignore, could already be disposed
-                    }
-                }
-
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

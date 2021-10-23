@@ -61,192 +61,260 @@ namespace FoxyMonitor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to Add Pool Account.
         /// </summary>
-        public static string AboutText {
+        public static string AddAccountPageTitle {
             get {
-                return ResourceManager.GetString("AboutText", resourceCulture);
+                return ResourceManager.GetString("AddAccountPageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Accounts.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static string AccountsText {
-            get {
-                return ResourceManager.GetString("AccountsText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Account.
-        /// </summary>
-        public static string AddAccountText {
-            get {
-                return ResourceManager.GetString("AddAccountText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Alerts.
-        /// </summary>
-        public static string AlertsText {
-            get {
-                return ResourceManager.GetString("AlertsText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static byte[] app {
+        public static System.Drawing.Icon app {
             get {
                 object obj = ResourceManager.GetObject("app", resourceCulture);
-                return ((byte[])(obj));
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Average Effort.
+        ///   Looks up a localized string similar to FoxyMonitor.
         /// </summary>
-        public static string AverageEffortText {
+        public static string AppDisplayName {
             get {
-                return ResourceManager.GetString("AverageEffortText", resourceCulture);
+                return ResourceManager.GetString("AppDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Collateral Balance.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static string CollateralBalanceText {
+        public static System.Drawing.Bitmap chia {
             get {
-                return ResourceManager.GetString("CollateralBalanceText", resourceCulture);
+                object obj = ResourceManager.GetObject("chia", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Difficulty.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static string DifficultyText {
+        public static System.Drawing.Bitmap chia_og {
             get {
-                return ResourceManager.GetString("DifficultyText", resourceCulture);
+                object obj = ResourceManager.GetObject("chia_og", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Distribution Ratio.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static string DistributionRatioText {
+        public static System.Drawing.Bitmap chives_og {
             get {
-                return ResourceManager.GetString("DistributionRatioText", resourceCulture);
+                object obj = ResourceManager.GetObject("chives_og", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Estimated Capacity History 24h.
+        ///   Looks up a localized string similar to DataGrid.
         /// </summary>
-        public static string ECHistoryChartHeaderText {
+        public static string DataGridPageTitle {
             get {
-                return ResourceManager.GetString("ECHistoryChartHeaderText", resourceCulture);
+                return ResourceManager.GetString("DataGridPageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Estimated Capacity.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static string EstimatedCapacityText {
+        public static System.Drawing.Bitmap flax_og {
             get {
-                return ResourceManager.GetString("EstimatedCapacityText", resourceCulture);
+                object obj = ResourceManager.GetObject("flax_og", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Est Daily Reward.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static string EstimatedDailyRewardText {
+        public static System.Drawing.Bitmap hddcoin_og {
             get {
-                return ResourceManager.GetString("EstimatedDailyRewardText", resourceCulture);
+                object obj = ResourceManager.GetObject("hddcoin_og", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last Partial Accepted.
+        ///   Looks up a localized string similar to Sample Orders.
         /// </summary>
-        public static string LastPartialAcceptedText {
+        public static string ListDetailsListDescription {
             get {
-                return ResourceManager.GetString("LastPartialAcceptedText", resourceCulture);
+                return ResourceManager.GetString("ListDetailsListDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next Payout In.
+        ///   Looks up a localized string similar to ListDetails.
         /// </summary>
-        public static string NextPayoutText {
+        public static string ListDetailsPageTitle {
             get {
-                return ResourceManager.GetString("NextPayoutText", resourceCulture);
+                return ResourceManager.GetString("ListDetailsPageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
+        ///   Looks up a localized string similar to Main.
         /// </summary>
-        public static string OpenAboutText {
+        public static string MainPageTitle {
             get {
-                return ResourceManager.GetString("OpenAboutText", resourceCulture);
+                return ResourceManager.GetString("MainPageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Accounts.
+        ///   Looks up a localized string similar to Settings page placeholder text.  Your app description goes here..
         /// </summary>
-        public static string OpenAccountsText {
+        public static string SettingsPageAboutText {
             get {
-                return ResourceManager.GetString("OpenAccountsText", resourceCulture);
+                return ResourceManager.GetString("SettingsPageAboutText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About this application.
+        /// </summary>
+        public static string SettingsPageAboutTitle {
+            get {
+                return ResourceManager.GetString("SettingsPageAboutTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Theme.
+        /// </summary>
+        public static string SettingsPageChooseThemeText {
+            get {
+                return ResourceManager.GetString("SettingsPageChooseThemeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Personalization.
+        /// </summary>
+        public static string SettingsPagePersonalizationTitle {
+            get {
+                return ResourceManager.GetString("SettingsPagePersonalizationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Statement.
+        /// </summary>
+        public static string SettingsPagePrivacyStatementText {
+            get {
+                return ResourceManager.GetString("SettingsPagePrivacyStatementText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dark.
+        /// </summary>
+        public static string SettingsPageRadioButtonDarkTheme {
+            get {
+                return ResourceManager.GetString("SettingsPageRadioButtonDarkTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string SettingsPageRadioButtonLightTheme {
+            get {
+                return ResourceManager.GetString("SettingsPageRadioButtonLightTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string SettingsPageRadioButtonWindowsDefaultTheme {
+            get {
+                return ResourceManager.GetString("SettingsPageRadioButtonWindowsDefaultTheme", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
-        public static string OpenSettingsText {
+        public static string SettingsPageTitle {
             get {
-                return ResourceManager.GetString("OpenSettingsText", resourceCulture);
+                return ResourceManager.GetString("SettingsPageTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pending Balance.
+        ///   Looks up a localized string similar to Add Account.
         /// </summary>
-        public static string PendingBalanceText {
+        public static string ShellAddAccountPage {
             get {
-                return ResourceManager.GetString("PendingBalanceText", resourceCulture);
+                return ResourceManager.GetString("ShellAddAccountPage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shares History 24h.
+        ///   Looks up a localized string similar to DataGrid.
         /// </summary>
-        public static string SharesHistoryChartHeaderText {
+        public static string ShellDataGridPage {
             get {
-                return ResourceManager.GetString("SharesHistoryChartHeaderText", resourceCulture);
+                return ResourceManager.GetString("ShellDataGridPage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total Netspace.
+        ///   Looks up a localized string similar to Go back.
         /// </summary>
-        public static string TotalNetspaceText {
+        public static string ShellGoBackButton {
             get {
-                return ResourceManager.GetString("TotalNetspaceText", resourceCulture);
+                return ResourceManager.GetString("ShellGoBackButton", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updated: {0:T}.
+        ///   Looks up a localized string similar to Open or close navigation.
         /// </summary>
-        public static string UpdatedStringFormat {
+        public static string ShellHamburgerButtonName {
             get {
-                return ResourceManager.GetString("UpdatedStringFormat", resourceCulture);
+                return ResourceManager.GetString("ShellHamburgerButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ListDetails.
+        /// </summary>
+        public static string ShellListDetailsPage {
+            get {
+                return ResourceManager.GetString("ShellListDetailsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main.
+        /// </summary>
+        public static string ShellMainPage {
+            get {
+                return ResourceManager.GetString("ShellMainPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ShellSettingsPage {
+            get {
+                return ResourceManager.GetString("ShellSettingsPage", resourceCulture);
             }
         }
     }

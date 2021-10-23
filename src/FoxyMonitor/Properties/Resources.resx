@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,68 +117,89 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutText" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="AccountsText" xml:space="preserve">
-    <value>Accounts</value>
-  </data>
-  <data name="AddAccountText" xml:space="preserve">
-    <value>Add Account</value>
-  </data>
-  <data name="AverageEffortText" xml:space="preserve">
-    <value>Average Effort</value>
-  </data>
-  <data name="CollateralBalanceText" xml:space="preserve">
-    <value>Collateral Balance</value>
-  </data>
-  <data name="DifficultyText" xml:space="preserve">
-    <value>Difficulty</value>
-  </data>
-  <data name="DistributionRatioText" xml:space="preserve">
-    <value>Distribution Ratio</value>
-  </data>
-  <data name="ECHistoryChartHeaderText" xml:space="preserve">
-    <value>Estimated Capacity History 24h</value>
-  </data>
-  <data name="EstimatedCapacityText" xml:space="preserve">
-    <value>Estimated Capacity</value>
-  </data>
-  <data name="EstimatedDailyRewardText" xml:space="preserve">
-    <value>Est Daily Reward</value>
-  </data>
-  <data name="LastPartialAcceptedText" xml:space="preserve">
-    <value>Last Partial Accepted</value>
-  </data>
-  <data name="NextPayoutText" xml:space="preserve">
-    <value>Next Payout In</value>
-  </data>
-  <data name="OpenAboutText" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="OpenAccountsText" xml:space="preserve">
-    <value>Accounts</value>
-  </data>
-  <data name="OpenSettingsText" xml:space="preserve">
+  <data name="ShellSettingsPage" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="PendingBalanceText" xml:space="preserve">
-    <value>Pending Balance</value>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Settings</value>
   </data>
-  <data name="SharesHistoryChartHeaderText" xml:space="preserve">
-    <value>Shares History 24h</value>
+  <data name="SettingsPageAboutText" xml:space="preserve">
+    <value>Settings page placeholder text.  Your app description goes here.</value>
   </data>
-  <data name="TotalNetspaceText" xml:space="preserve">
-    <value>Total Netspace</value>
+  <data name="SettingsPageAboutTitle" xml:space="preserve">
+    <value>About this application</value>
   </data>
-  <data name="UpdatedStringFormat" xml:space="preserve">
-    <value>Updated: {0:T}</value>
+  <data name="SettingsPageChooseThemeText" xml:space="preserve">
+    <value>Choose Theme</value>
   </data>
-  <data name="AlertsText" xml:space="preserve">
-    <value>Alerts</value>
+  <data name="SettingsPagePersonalizationTitle" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="SettingsPagePrivacyStatementText" xml:space="preserve">
+    <value>Privacy Statement</value>
+  </data>
+  <data name="SettingsPageRadioButtonDarkTheme" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsPageRadioButtonLightTheme" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsPageRadioButtonWindowsDefaultTheme" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="ShellDataGridPage" xml:space="preserve">
+    <value>DataGrid</value>
+  </data>
+  <data name="DataGridPageTitle" xml:space="preserve">
+    <value>DataGrid</value>
+  </data>
+  <data name="ShellListDetailsPage" xml:space="preserve">
+    <value>ListDetails</value>
+  </data>
+  <data name="ListDetailsPageTitle" xml:space="preserve">
+    <value>ListDetails</value>
+  </data>
+  <data name="ListDetailsListDescription" xml:space="preserve">
+    <value>Sample Orders</value>
+  </data>
+  <data name="ShellMainPage" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="MainPageTitle" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="ShellGoBackButton" xml:space="preserve">
+    <value>Go back</value>
+  </data>
+  <data name="ShellHamburgerButtonName" xml:space="preserve">
+    <value>Open or close navigation</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>FoxyMonitor</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="chives_og" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\chives_og.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flax_og" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\flax_og.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hddcoin_og" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hddcoin_og.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ShellAddAccountPage" xml:space="preserve">
+    <value>Add Account</value>
+  </data>
+  <data name="chia" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\chia.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="chia_og" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\chia_og.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AddAccountPageTitle" xml:space="preserve">
+    <value>Add Pool Account</value>
+  </data>
   <data name="app" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\app.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\app.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

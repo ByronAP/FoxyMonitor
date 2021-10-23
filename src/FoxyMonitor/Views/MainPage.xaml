@@ -1,0 +1,170 @@
+﻿<Page
+    x:Class="FoxyMonitor.Views.MainPage"
+    Style="{DynamicResource MahApps.Styles.Page}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:splot="clr-namespace:SplotControl;assembly=SplotControl"
+    xmlns:behaviors="clr-namespace:FoxyMonitor.Behaviors"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:interactive="http://schemas.microsoft.com/xaml/behaviors"
+    mc:Ignorable="d"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="Content_Grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="731*"/>
+            <ColumnDefinition Width="69*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="6,6,6,6" Grid.ColumnSpan="2" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}}">
+            <DockPanel HorizontalAlignment="Stretch">
+                <ContentControl DockPanel.Dock="Left" Template="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToGlyph}}" Height="32" Width="32" HorizontalAlignment="Left" />
+                <TextBlock DockPanel.Dock="Left" Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolNameToPoolDisplayName}}" Margin="6,0,0,0" Width="120" VerticalAlignment="Center" FontSize="20" />
+                <Grid DockPanel.Dock="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="DisplayNameTextBlock" Grid.Column="0" Text="{Binding MyAccountService.SelectedAccount.DisplayName}" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Margin="0,0,6,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding MyAccountService.SelectedAccount.LauncherId}" TextTrimming="CharacterEllipsis" ToolTip="{Binding MyAccountService.SelectedAccount.LauncherId}" ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Width="{Binding ActualWidth, ElementName=DisplayNameTextBlock, Mode=OneWay}" />
+                </Grid>
+            </DockPanel>
+        </Grid>
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Add An Account To Get Started [+]" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}, ConverterParameter=invert}" FontSize="20" />
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}}">
+            <StackPanel>
+                <WrapPanel Orientation="Horizontal">
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Pending Balance">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconRemixIcon DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="BankLine" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PendingBalance, StringFormat=N12}" />
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToCurrencyCode}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Est Daily Reward">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconRemixIcon DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="TrophyLine" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccountEstDailyReward, Mode=OneWay, StringFormat=N8}" />
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToCurrencyCode}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Est Capacity (EC)">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconRemixIcon DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="HardDriveLine" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.EstCapacity, Converter={StaticResource GiBToDisplayString}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Last Accepted Partial">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconMaterial DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="VoteOutline" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                            <Run Text="{Binding MyAccountService.SelectedAccount.LastAcceptedPartialTime, Converter={StaticResource TimeToAgoString}}">
+                                <interactive:Interaction.Behaviors>
+                                    <behaviors:PeriodicBindingUpdateBehavior Interval="0:00:10" Property="{x:Static Run.TextProperty}" Mode="UpdateTarget" />
+                                </interactive:Interaction.Behaviors>
+                            </Run>
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Payout Addr Balance">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconBoxIcons DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="RegularWallet" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.Collateral, StringFormat=N}" />
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToCurrencyCode}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Collateral Balance">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconRemixIcon DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="BankLine" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.Collateral, StringFormat=N}" />
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToCurrencyCode}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Est Next Payout Time">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconRemixIcon DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="TimeLine" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccountPostPoolInfo.LastPayoutTime, Converter={StaticResource LastPayoutTimeToNextPayoutTimeString}}">
+                                   <interactive:Interaction.Behaviors>
+                                    <behaviors:PeriodicBindingUpdateBehavior Interval="0:00:20" Property="{x:Static Run.TextProperty}" Mode="UpdateTarget" />
+                                </interactive:Interaction.Behaviors>                                    
+                                </Run>
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Difficulty">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconMaterial DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="Weight" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.Difficulty}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Est Total Netspace">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconMaterial DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="Sigma" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccountPostPoolInfo.NetworkSpaceInTiB, Converter={StaticResource TiBToDisplayString}}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Distribution Ratio">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconFontAwesome DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="BalanceScaleRightSolid" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccount.DistributionRatio}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                    <mah:Tile Margin="6" Padding="0" Height="100" Width="175" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Pool Average Effort">
+                        <DockPanel Height="66" Margin="0,38,0,0">
+                            <iconPacks:PackIconMaterial DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="SpeedometerMedium" Width="30" Height="30" Margin="0,0,0,6"/>
+                            <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+                                <Run Text="{Binding MyAccountService.SelectedAccountPostPoolInfo.AverageEffort, StringFormat=P}" />
+                            </TextBlock>
+                        </DockPanel>
+                    </mah:Tile>
+                </WrapPanel>
+                <WrapPanel Orientation="Horizontal">
+                    <mah:Tile Margin="6" Padding="0" Height="175" Width="363" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Shares History">
+                        <splot:SPlotControl x:Name="SharesPlotControl" Padding="0" Height="200" Width="364" Margin="0,2,0,0" HeaderText="" />
+                    </mah:Tile>
+                    <mah:Tile x:Name="EC_Chart_Tile" Margin="6" Padding="0" Height="175" Width="363" VerticalTitleAlignment="Top" HorizontalTitleAlignment="Center" Title="Estimated Capacity History">
+                        <splot:SPlotControl x:Name="EcPlotControl" Padding="0" Height="185" Width="364" Margin="0,2,0,0" HeaderText="" />
+                    </mah:Tile>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <StatusBar x:Name="MainStatusBar" Grid.Row="2" Background="{DynamicResource MahApps.HamburgerMenu.Pane.Background}" Grid.ColumnSpan="2">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel LastChildFill="False"/>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Text="{Binding MyAccountService.SelectedAccount.LastUpdated, Converter={StaticResource UtcTimestampToLocalDateTime}, StringFormat=Updated: {0:G}}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <Separator />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Page>
