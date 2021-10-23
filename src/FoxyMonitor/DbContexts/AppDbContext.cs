@@ -16,6 +16,7 @@ namespace FoxyMonitor.DbContexts
         internal DbSet<PostAccountHistoricalDbItem> PostAccountHistoricalDbItems { get; set; }
         internal DbSet<PostPoolInfo> PostPools { get; set; }
         internal DbSet<PostPoolHistoricalDbItem> PostPoolHistoricalDbItems { get; set; }
+        internal DbSet<AccountBalanceHistoricalDbItem> AccountBalanceHistoricalDbItems { get; set; }
 
         private readonly string _dataDirectory;
         private readonly string _dbFileName;
@@ -41,7 +42,7 @@ namespace FoxyMonitor.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            var sqlDatabaseFullPath = Path.Combine(_localAppData, _dataDirectory, _dbFileName); ;
+            var sqlDatabaseFullPath = Path.Combine(_localAppData, _dataDirectory, _dbFileName);
 
             _ = optionsBuilder.UseSqlite($"Filename={sqlDatabaseFullPath}", options =>
             {
@@ -82,6 +83,10 @@ namespace FoxyMonitor.DbContexts
                     }
 
                     _logger?.LogWarning("Deleting database due to incompatability.");
+
+                    // create a backup file
+                    BackupDbFile();
+
                     var isDeleted = await Database.EnsureDeletedAsync();
                     if (isDeleted)
                     {
@@ -133,6 +138,29 @@ namespace FoxyMonitor.DbContexts
             }
 
             return true;
+        }
+
+        public bool BackupDbFile()
+        {
+            try
+            {
+                Database.CloseConnection();
+
+                var sourceSqlDatabaseFullPath = Path.Combine(_localAppData, _dataDirectory, _dbFileName);
+                var destinationSqlDatabaseDirectory = Path.Combine(_localAppData, _dataDirectory, "Backups");
+                var destinationSqlDatabaseFullPath = Path.Combine(destinationSqlDatabaseDirectory, $"db-backup-{DateTimeOffset.Now.ToUnixTimeSeconds()}.bak");
+
+                if (!Directory.Exists(destinationSqlDatabaseDirectory)) Directory.CreateDirectory(destinationSqlDatabaseDirectory);
+
+                File.Copy(sourceSqlDatabaseFullPath, destinationSqlDatabaseFullPath, true);
+
+                return File.Exists(destinationSqlDatabaseFullPath);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to backup database.");
+                return false;
+            }
         }
     }
 }
