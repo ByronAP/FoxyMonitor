@@ -101,6 +101,11 @@ namespace FoxyMonitor.Models
         public ObservableCollection<PostAccountHistoricalDbItem> PostAccountHistoricalDbItems { get => _postAccountHistoricalDbItems; set => SetProperty(ref _postAccountHistoricalDbItems, value); }
         private ObservableCollection<PostAccountHistoricalDbItem> _postAccountHistoricalDbItems = new ObservableCollection<PostAccountHistoricalDbItem>();
 
+        /// <summary>
+        /// Balance history
+        /// </summary>
+        public ObservableCollection<AccountBalanceHistoricalDbItem> AccountBalanceHistoricalDbItems { get => _accountBalanceHistoricalDbItems; set => SetProperty(ref _accountBalanceHistoricalDbItems, value); }
+        private ObservableCollection<AccountBalanceHistoricalDbItem> _accountBalanceHistoricalDbItems = new ObservableCollection<AccountBalanceHistoricalDbItem>();
 
         /// <summary>
         /// The last time this accounts data was updated from the pool server (USE UTC ONLY, ms)

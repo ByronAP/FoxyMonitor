@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoxyMonitor.Migrations
 {
@@ -99,6 +99,29 @@ namespace FoxyMonitor.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AccountBalanceHistoricalDbItems",
+                columns: table => new
+                {
+                    Id = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PoolName = table.Column<string>(type: "TEXT", nullable: true),
+                    LauncherId = table.Column<string>(type: "TEXT", nullable: true),
+                    Timestamp = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    Balance = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    AccountId = table.Column<uint>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountBalanceHistoricalDbItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccountBalanceHistoricalDbItems_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PostAccountHistoricalDbItems",
                 columns: table => new
                 {
@@ -148,6 +171,17 @@ namespace FoxyMonitor.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountBalanceHistoricalDbItems_AccountId",
+                table: "AccountBalanceHistoricalDbItems",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountBalanceHistoricalDbItems_PoolName_LauncherId_Timestamp",
+                table: "AccountBalanceHistoricalDbItems",
+                columns: new[] { "PoolName", "LauncherId", "Timestamp" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Accounts_LauncherId_PoolName",
                 table: "Accounts",
                 columns: new[] { "LauncherId", "PoolName" },
@@ -185,6 +219,9 @@ namespace FoxyMonitor.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AccountBalanceHistoricalDbItems");
+
             migrationBuilder.DropTable(
                 name: "Alerts");
 

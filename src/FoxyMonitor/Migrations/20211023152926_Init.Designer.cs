@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoxyMonitor.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211023031320_Init")]
+    [Migration("20211023152926_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,37 @@ namespace FoxyMonitor.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("FoxyMonitor.Models.AccountBalanceHistoricalDbItem", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint?>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("Balance")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LauncherId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PoolName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<ulong>("Timestamp")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PoolName", "LauncherId", "Timestamp")
+                        .IsUnique();
+
+                    b.ToTable("AccountBalanceHistoricalDbItems");
                 });
 
             modelBuilder.Entity("FoxyMonitor.Models.Alert", b =>
@@ -294,6 +325,13 @@ namespace FoxyMonitor.Migrations
                     b.ToTable("PostPools");
                 });
 
+            modelBuilder.Entity("FoxyMonitor.Models.AccountBalanceHistoricalDbItem", b =>
+                {
+                    b.HasOne("FoxyMonitor.Models.Account", null)
+                        .WithMany("AccountBalanceHistoricalDbItems")
+                        .HasForeignKey("AccountId");
+                });
+
             modelBuilder.Entity("FoxyMonitor.Models.PostAccountHistoricalDbItem", b =>
                 {
                     b.HasOne("FoxyMonitor.Models.Account", null)
@@ -312,6 +350,8 @@ namespace FoxyMonitor.Migrations
 
             modelBuilder.Entity("FoxyMonitor.Models.Account", b =>
                 {
+                    b.Navigation("AccountBalanceHistoricalDbItems");
+
                     b.Navigation("PostAccountHistoricalDbItems");
                 });
 
