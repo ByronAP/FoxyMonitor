@@ -99,14 +99,18 @@ namespace FoxyMonitor.Services
                             {
                                 var pool = _appDbContext.PostPools.FirstOrDefault(x => x.PoolApiName.Equals(Enum.Parse(typeof(PostPool), account.PoolName, true)));
                                 var poolName = pool == null ? account.PoolName : pool.PoolName.Replace("Foxy-Pool ", "");
-                                try
+
+                                if (account.PayoutAddress != null)
                                 {
-                                    var newBalance = PostPoolBalanceConverter.ConvertBalance(pool.PoolApiName, await _postChainExplorerService.GetAddressBalanceAsync(pool.PoolApiName, account.PayoutAddress));
-                                    if (newBalance != account.PayoutAddressBalance) account.PayoutAddressBalance = newBalance;
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.LogError(ex, "Account updater failed to retrieve account balance from chain api.");
+                                    try
+                                    {
+                                        var newBalance = PostPoolBalanceConverter.ConvertBalance(pool.PoolApiName, await _postChainExplorerService.GetAddressBalanceAsync(pool.PoolApiName, account.PayoutAddress));
+                                        if (newBalance != account.PayoutAddressBalance) account.PayoutAddressBalance = newBalance;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.LogError(ex, "Account updater failed to retrieve account balance from chain api.");
+                                    }
                                 }
 
                                 if (accountData.PoolPublicKey != null && account.PoolPubKey != accountData.PoolPublicKey)
