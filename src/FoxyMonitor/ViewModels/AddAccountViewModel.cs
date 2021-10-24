@@ -2,6 +2,7 @@ using FoxyMonitor.Contracts.Services;
 using FoxyMonitor.Contracts.ViewModels;
 using FoxyMonitor.DbContexts;
 using FoxyMonitor.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
@@ -31,9 +32,11 @@ namespace FoxyMonitor.ViewModels
 
         private readonly IAccountService _accountService;
         private readonly AppDbContext _appDbContext;
+        private readonly ILogger<AddAccountViewModel> _logger;
 
-        public AddAccountViewModel(IPostPoolService postPoolAccountsService, IAccountService accountService, AppDbContext appDbContext)
+        public AddAccountViewModel(ILogger<AddAccountViewModel> logger, IPostPoolService postPoolAccountsService, IAccountService accountService, AppDbContext appDbContext)
         {
+            _logger = logger;
             MyPostPoolService = postPoolAccountsService;
             _accountService = accountService;
             _appDbContext = appDbContext;
@@ -141,9 +144,9 @@ namespace FoxyMonitor.ViewModels
                         newAccount.PostAccountHistoricalDbItems = new ObservableCollection<PostAccountHistoricalDbItem>();
                     }
                 }
-                catch //(Exception ex)
+                catch (Exception ex)
                 {
-                    //Logger.LogError(ex, "Failed to create new account historical entries, possible api failure.");
+                    _logger.LogError(ex, "Failed to create new account historical entries, possible api failure.");
                 }
 
                 _accountService.AddAccount(newAccount);
