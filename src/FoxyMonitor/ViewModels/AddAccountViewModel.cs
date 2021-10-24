@@ -1,4 +1,4 @@
-﻿using FoxyMonitor.Contracts.Services;
+using FoxyMonitor.Contracts.Services;
 using FoxyMonitor.Contracts.ViewModels;
 using FoxyMonitor.DbContexts;
 using FoxyMonitor.Models;

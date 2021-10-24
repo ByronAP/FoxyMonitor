@@ -86,7 +86,7 @@
                         <DockPanel Height="66" Margin="0,38,0,0">
                             <iconPacks:PackIconBoxIcons DockPanel.Dock="Top" HorizontalAlignment="Center" Kind="RegularWallet" Width="30" Height="30" Margin="0,0,0,6"/>
                             <TextBlock DockPanel.Dock="Bottom" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
-                                <Run Text="{Binding MyAccountService.SelectedAccount.Collateral, StringFormat=N}" />
+                                <Run Text="{Binding MyAccountService.SelectedAccount.PayoutAddressBalance, StringFormat=N}" />
                                 <Run Text="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToCurrencyCode}}" />
                             </TextBlock>
                         </DockPanel>

@@ -1,5 +1,6 @@
 ﻿using FoxyMonitor.Contracts.Services;
 using FoxyMonitor.DbContexts;
+using FoxyMonitor.Helpers;
 using FoxyMonitor.Models;
 using FoxyPoolApi;
 using Microsoft.Extensions.Hosting;
@@ -19,15 +20,17 @@ namespace FoxyMonitor.Services
         private readonly AppDbContext _appDbContext;
         private readonly ILogger<AccountUpdaterService> _logger;
         private readonly SemaphoreSlim _semaphore;
+        private readonly IPostChainExplorerService _postChainExplorerService;
         private Timer _timer;
         private int _executionCount;
         private TimeSpan _interval;
 
-        public AccountUpdaterService(IApplicationPropertiesService appPropertiesService, AppDbContext appDbContext, ILogger<AccountUpdaterService> logger)
+        public AccountUpdaterService(IApplicationPropertiesService appPropertiesService, AppDbContext appDbContext, ILogger<AccountUpdaterService> logger, IPostChainExplorerService postChainExplorerService)
         {
             _appPropertiesService = (ApplicationPropertiesService)appPropertiesService;
             _appDbContext = appDbContext;
             _logger = logger;
+            _postChainExplorerService = postChainExplorerService;
             _semaphore = new SemaphoreSlim(1);
 
             if (appPropertiesService.Contains(AccountsUpdateIntervalPropertyKeyName))
@@ -96,6 +99,15 @@ namespace FoxyMonitor.Services
                             {
                                 var pool = _appDbContext.PostPools.FirstOrDefault(x => x.PoolApiName.Equals(Enum.Parse(typeof(PostPool), account.PoolName, true)));
                                 var poolName = pool == null ? account.PoolName : pool.PoolName.Replace("Foxy-Pool ", "");
+                                try
+                                {
+                                    var newBalance = PostPoolBalanceConverter.ConvertBalance(pool.PoolApiName, await _postChainExplorerService.GetAddressBalanceAsync(pool.PoolApiName, account.PayoutAddress));
+                                    if (newBalance != account.PayoutAddressBalance) account.PayoutAddressBalance = newBalance;
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "Account updater failed to retrieve account balance from chain api.");
+                                }
 
                                 if (accountData.PoolPublicKey != null && account.PoolPubKey != accountData.PoolPublicKey)
                                 {
@@ -226,14 +238,14 @@ namespace FoxyMonitor.Services
                                         {
                                             try
                                             {
-                                                if (!account.PostAccountHistoricalDbItems.Any(x => x.CreatedAt.Equals(item.CreatedAt)))
+                                                if (!_appDbContext.PostAccountHistoricalDbItems.Any(x => x.AccountId == account.Id && x.CreatedAt == Convert.ToUInt64(item.CreatedAt.ToUnixTimeMilliseconds())))
                                                 {
                                                     account.PostAccountHistoricalDbItems.Add(PostAccountHistoricalDbItem.FromApiItem(item));
                                                 }
                                                 else
                                                 {
                                                     // make sure nothing has changed for the given point
-                                                    var record = account.PostAccountHistoricalDbItems.First(x => x.CreatedAt.Equals(item.CreatedAt));
+                                                    var record = _appDbContext.PostAccountHistoricalDbItems.First(x => x.AccountId == account.Id && x.CreatedAt == Convert.ToUInt64(item.CreatedAt.ToUnixTimeMilliseconds()));
                                                     if (record.ShareCount != item.ShareCount)
                                                     {
                                                         record.ShareCount = item.ShareCount;
