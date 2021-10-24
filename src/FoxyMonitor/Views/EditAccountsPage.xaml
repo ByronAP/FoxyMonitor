@@ -29,11 +29,11 @@
                 Margin="{StaticResource SmallLeftRightMargin}"
                 KeyboardNavigation.TabNavigation="Once">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Id}" Header="ID" />
+                    <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding DisplayName}" Header="Display Name" />
-                    <DataGridTextColumn Binding="{Binding PoolName}" Header="Pool Name" />
-                    <DataGridTextColumn Binding="{Binding LauncherId}" Header="Launcher Id" />
-                    <DataGridTextColumn Binding="{Binding AuthToken}" Header="Auth Token" />
+                    <DataGridTextColumn Binding="{Binding PoolName}" Header="Pool Name" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding LauncherId}" Header="Launcher Id" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding AuthToken}" Header="Auth Token" IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
