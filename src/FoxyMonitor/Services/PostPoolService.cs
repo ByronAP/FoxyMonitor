@@ -49,16 +49,17 @@ namespace FoxyMonitor.Services
         {
             if (e == null || e.Entry.Entity.GetType() != typeof(PostPoolInfo)) return;
 
-            UpdatePoolNames();
-
             var poolItem = e.Entry.Entity as PostPoolInfo;
+            // BUG: Only 'Unchanged' seem to fire, 'Added' should fire on first run when the
+            // db is being populated but it does not.
             switch (e.Entry.State)
             {
                 case EntityState.Detached:
                 case EntityState.Unchanged:
+                    // HACK: SEE BUG ABOVE
+                    UpdatePoolNames();
+                    return;
                 case EntityState.Modified:
-                    OnPropertyChanging(nameof(PostPoolNames));
-                    OnPropertyChanged(nameof(PostPoolNames));
                     return;
                 case EntityState.Deleted:
                     OnPropertyChanging(nameof(PostPoolNames));
