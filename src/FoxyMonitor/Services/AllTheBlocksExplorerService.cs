@@ -148,5 +148,21 @@ namespace FoxyMonitor.Services
                 _ => throw new ArgumentOutOfRangeException(nameof(pool)),
             };
         }
+
+        public async Task<ATBCoinsResponse> GetCoinsByAddress(PostPool pool, string address, uint pageNumber = 0, uint pageSize = 100)
+        {
+            var apiPoolName = PostPoolToExplorerCoinName(pool);
+            var resourcePath = Path.Combine(apiPoolName, "coin", "address");
+
+            var request = new RestRequest(resourcePath, Method.GET);
+            request.AddParameter("pageNumber", pageNumber);
+            request.AddParameter("pageSize", pageSize);
+
+            var restResponse = await PerformRequestAsync<ATBCoinsResponse>(request);
+
+            if (restResponse == null || !(restResponse.First || restResponse.Last)) throw new Exception($"Get {apiPoolName} coins for address failed");
+
+            return restResponse;
+        }
     }
 }

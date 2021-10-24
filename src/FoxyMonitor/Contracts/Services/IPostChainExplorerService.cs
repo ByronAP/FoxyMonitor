@@ -1,4 +1,5 @@
-﻿using FoxyPoolApi;
+﻿using FoxyMonitor.Models.AtbResponses;
+using FoxyPoolApi;
 using System.Threading.Tasks;
 
 namespace FoxyMonitor.Contracts.Services
@@ -17,6 +18,8 @@ namespace FoxyMonitor.Contracts.Services
         Task<ulong> GetHeightAsync(PostPool pool);
 
         string GetExplorerUrl(PostPool pool);
+
+        Task<ATBCoinsResponse> GetCoinsByAddress(PostPool pool, string address, uint pageNumber, uint pageSize);
 
     }
 }
