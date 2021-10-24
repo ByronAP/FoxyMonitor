@@ -19,7 +19,7 @@ namespace FoxyMonitor.Services
             _serviceProvider = serviceProvider;
             Configure<MainViewModel, MainPage>();
             Configure<AddAccountViewModel, AddAccountPage>();
-            Configure<DataGridViewModel, DataGridPage>();
+            Configure<EditAccountsViewModel, EditAccountsPage>();
             Configure<SettingsViewModel, SettingsPage>();
         }
 

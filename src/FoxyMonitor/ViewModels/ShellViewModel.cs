@@ -44,6 +44,7 @@ namespace FoxyMonitor.ViewModels
         public ObservableCollection<HamburgerMenuItem> OptionMenuItems { get; } = new ObservableCollection<HamburgerMenuItem>()
         {
             new HamburgerMenuGlyphItem() { Label = Resources.ShellAddAccountPage, Glyph = "\uE948", TargetPageType = typeof(AddAccountViewModel) },
+            new HamburgerMenuGlyphItem() { Label = Resources.ShellEditAccountsPage, Glyph = "\uE70F", TargetPageType = typeof(EditAccountsViewModel) },
             new HamburgerMenuGlyphItem() { Label = Resources.ShellSettingsPage, Glyph = "\uE713", TargetPageType = typeof(SettingsViewModel) }
         };
 

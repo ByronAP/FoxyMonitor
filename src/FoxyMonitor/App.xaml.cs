@@ -109,8 +109,8 @@ namespace FoxyMonitor
             services.AddTransient<MainViewModel>();
             services.AddTransient<MainPage>();
 
-            services.AddTransient<DataGridViewModel>();
-            services.AddTransient<DataGridPage>();
+            services.AddTransient<EditAccountsViewModel>();
+            services.AddTransient<EditAccountsPage>();
 
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();

@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace FoxyMonitor.Views
 {
-    public partial class DataGridPage : Page
+    public partial class EditAccountsPage : Page
     {
-        public DataGridPage(DataGridViewModel viewModel)
+        public EditAccountsPage(EditAccountsViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;

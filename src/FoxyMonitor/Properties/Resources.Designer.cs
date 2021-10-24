@@ -274,6 +274,15 @@ namespace FoxyMonitor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Accounts.
+        /// </summary>
+        public static string ShellEditAccountsPage {
+            get {
+                return ResourceManager.GetString("ShellEditAccountsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go back.
         /// </summary>
         public static string ShellGoBackButton {
