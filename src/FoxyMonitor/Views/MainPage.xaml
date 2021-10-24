@@ -23,6 +23,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Template="{StaticResource FoxyGlyph}" Margin="0,90,0,0" Height="100"  Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}, ConverterParameter=invert}" />
         <Grid Grid.Row="0" Margin="6,6,6,6" Grid.ColumnSpan="2" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}}">
             <DockPanel HorizontalAlignment="Stretch">
                 <ContentControl DockPanel.Dock="Left" Template="{Binding MyAccountService.SelectedAccount.PoolName, Converter={StaticResource PoolApiNameToGlyph}}" Height="32" Width="32" HorizontalAlignment="Left" />
@@ -38,6 +39,7 @@
                 </Grid>
             </DockPanel>
         </Grid>
+        
         <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Add An Account To Get Started [+]" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}, ConverterParameter=invert}" FontSize="20" />
         <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding MyAccountService.SelectedAccount, Converter={StaticResource NullToVisibility}}">
             <StackPanel>
