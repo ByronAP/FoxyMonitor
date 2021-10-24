@@ -93,6 +93,7 @@ namespace FoxyMonitor
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IPostChainExplorerService, AllTheBlocksExplorerService>();
 
             // Background Services
             services.AddHostedService<PoolInfoUpdaterService>();
@@ -116,6 +117,9 @@ namespace FoxyMonitor
 
             // Configuration
             services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
+
+            // Mem Cache
+            services.AddMemoryCache();
         }
 
         private async void OnExit(object sender, ExitEventArgs e)
