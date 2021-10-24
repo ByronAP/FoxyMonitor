@@ -47,22 +47,28 @@ namespace FoxyMonitor.Services
 
         private void ChangeTracker_StateChanged(object sender, Microsoft.EntityFrameworkCore.ChangeTracking.EntityStateChangedEventArgs e)
         {
-            if (e == null || e.Entry.GetType() != typeof(PostPoolInfo)) return;
+            if (e == null || e.Entry.Entity.GetType() != typeof(PostPoolInfo)) return;
 
             UpdatePoolNames();
 
             var poolItem = e.Entry.Entity as PostPoolInfo;
             switch (e.Entry.State)
             {
-                case Microsoft.EntityFrameworkCore.EntityState.Detached:
-                case Microsoft.EntityFrameworkCore.EntityState.Unchanged:
-                case Microsoft.EntityFrameworkCore.EntityState.Modified:
+                case EntityState.Detached:
+                case EntityState.Unchanged:
+                case EntityState.Modified:
+                    OnPropertyChanging(nameof(PostPoolNames));
+                    OnPropertyChanged(nameof(PostPoolNames));
                     return;
-                case Microsoft.EntityFrameworkCore.EntityState.Deleted:
+                case EntityState.Deleted:
+                    OnPropertyChanging(nameof(PostPoolNames));
                     PostPoolNames.Remove(poolItem.PoolApiName.ToString());
+                    OnPropertyChanged(nameof(PostPoolNames));
                     return;
-                case Microsoft.EntityFrameworkCore.EntityState.Added:
+                case EntityState.Added:
+                    OnPropertyChanging(nameof(PostPoolNames));
                     PostPoolNames.Add(poolItem.PoolApiName.ToString());
+                    OnPropertyChanged(nameof(PostPoolNames));
                     return;
             }
         }

@@ -85,7 +85,7 @@ namespace FoxyMonitor.Services
 
         private void ChangeTracker_StateChanged(object sender, EntityStateChangedEventArgs e)
         {
-            if (e == null || e.Entry.GetType() != typeof(Account)) return;
+            if (e == null || e.Entry.Entity.GetType() != typeof(Account)) return;
 
             var account = e.Entry.Entity as Account;
             if (_selectedAccount.Id == account.Id)
