@@ -27,6 +27,8 @@ namespace FoxyMonitor.Services
             get => _selectedAccount;
             set
             {
+                if (value == null) return;
+
                 OnPropertyChanging(nameof(SelectedAccountName));
                 OnPropertyChanging(nameof(SelectedAccountEstDailyReward));
                 OnPropertyChanging(nameof(SelectedAccountPostPoolInfo));
@@ -88,7 +90,7 @@ namespace FoxyMonitor.Services
             if (e == null || e.Entry.Entity.GetType() != typeof(Account)) return;
 
             var account = e.Entry.Entity as Account;
-            if (_selectedAccount.Id == account.Id)
+            if (_selectedAccount != null && _selectedAccount.Id == account.Id)
             {
                 _selectedAccount = account;
             }
@@ -98,7 +100,14 @@ namespace FoxyMonitor.Services
         public bool AddAccount(Account account)
         {
             _appDbContext.Accounts.Add(account);
+
             var count = _appDbContext.SaveChanges();
+
+            if (count > 0 && SelectedAccount == null)
+            {
+                SelectedAccount = account;
+            }
+
             return count > 0;
         }
 
