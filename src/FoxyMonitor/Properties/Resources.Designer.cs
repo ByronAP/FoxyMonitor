@@ -166,25 +166,34 @@ namespace FoxyMonitor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Main.
+        ///   Looks up a localized string similar to © 2021 ByronAP, (Source GitHub Repository).
         /// </summary>
-        public static string MainPageTitle {
+        public static string SettingsPageAboutCopyrightText {
             get {
-                return ResourceManager.GetString("MainPageTitle", resourceCulture);
+                return ResourceManager.GetString("SettingsPageAboutCopyrightText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings page placeholder text.  Your app description goes here..
+        ///   Looks up a localized string similar to FoxyPool Name and Logo used with permission.
         /// </summary>
-        public static string SettingsPageAboutText {
+        public static string SettingsPageAboutFoxyDisclamerText {
             get {
-                return ResourceManager.GetString("SettingsPageAboutText", resourceCulture);
+                return ResourceManager.GetString("SettingsPageAboutFoxyDisclamerText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About this application.
+        ///   Looks up a localized string similar to Distributed under the MIT open source license.
+        /// </summary>
+        public static string SettingsPageAboutLicenseText {
+            get {
+                return ResourceManager.GetString("SettingsPageAboutLicenseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About FoxyMonitor.
         /// </summary>
         public static string SettingsPageAboutTitle {
             get {
@@ -207,15 +216,6 @@ namespace FoxyMonitor.Properties {
         public static string SettingsPagePersonalizationTitle {
             get {
                 return ResourceManager.GetString("SettingsPagePersonalizationTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Privacy Statement.
-        /// </summary>
-        public static string SettingsPagePrivacyStatementText {
-            get {
-                return ResourceManager.GetString("SettingsPagePrivacyStatementText", resourceCulture);
             }
         }
         

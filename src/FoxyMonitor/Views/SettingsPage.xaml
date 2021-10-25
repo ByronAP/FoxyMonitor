@@ -84,22 +84,33 @@
                     Margin="{StaticResource XSmallTopMargin}"
                     Style="{StaticResource BodyTextStyle}" />
                 <TextBlock
-                    Margin="{StaticResource XSmallTopMargin}"
-                    Style="{StaticResource BodyTextStyle}"
-                    Text="{x:Static properties:Resources.SettingsPageAboutText}" />
-
-                <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
-                    AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
+                    AutomationProperties.Name="{Binding Text, ElementName=settingsCopyrightStatement}">
                     <Hyperlink
-                        Command="{Binding PrivacyStatementCommand}"
-                        AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
+                        Command="{Binding OpenRepoCommand}"
+                        AutomationProperties.Name="{Binding Text, ElementName=settingsCopyrightStatement}">
                         <TextBlock
-                            x:Name="settingsPrivacyStatement"
+                            x:Name="settingsCopyrightStatement"
                             Style="{StaticResource BodyTextStyle}"
-                            Text="{x:Static properties:Resources.SettingsPagePrivacyStatementText}" />
+                            Text="{x:Static properties:Resources.SettingsPageAboutCopyrightText}" />
                     </Hyperlink>
                 </TextBlock>
+                <TextBlock
+                    Margin="{StaticResource SmallTopMargin}"
+                    AutomationProperties.Name="{Binding Text, ElementName=settingsLicenseStatement}">
+                    <Hyperlink
+                        Command="{Binding OpenLicenseCommand}"
+                        AutomationProperties.Name="{Binding Text, ElementName=settingsLicenseStatement}">
+                        <TextBlock
+                            x:Name="settingsLicenseStatement"
+                            Style="{StaticResource BodyTextStyle}"
+                            Text="{x:Static properties:Resources.SettingsPageAboutLicenseText}" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock
+                    Margin="{StaticResource XSmallTopMargin}"
+                    Style="{StaticResource BodyTextStyle}"
+                    Text="{x:Static properties:Resources.SettingsPageAboutFoxyDisclamerText}" />
             </StackPanel>
         </Grid>
     </ScrollViewer>

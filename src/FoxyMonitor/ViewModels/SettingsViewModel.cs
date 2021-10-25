@@ -9,7 +9,6 @@ using System.Windows.Input;
 
 namespace FoxyMonitor.ViewModels
 {
-    // TODO WTS: Change the URL for your privacy policy in the appsettings.json file, currently set to https://YourPrivacyUrlGoesHere
     public class SettingsViewModel : ObservableObject, INavigationAware
     {
         private readonly AppConfig _appConfig;
@@ -19,7 +18,8 @@ namespace FoxyMonitor.ViewModels
         private AppTheme _theme;
         private string _versionDescription;
         private ICommand _setThemeCommand;
-        private ICommand _privacyStatementCommand;
+        private ICommand _openLicenseCommand;
+        private ICommand _openRepoCommand;
 
         public AppTheme Theme
         {
@@ -35,7 +35,9 @@ namespace FoxyMonitor.ViewModels
 
         public ICommand SetThemeCommand => _setThemeCommand ??= new RelayCommand<string>(OnSetTheme);
 
-        public ICommand PrivacyStatementCommand => _privacyStatementCommand ??= new RelayCommand(OnPrivacyStatement);
+        public ICommand OpenLicenseCommand => _openLicenseCommand ??= new RelayCommand(OnOpenLicense);
+
+        public ICommand OpenRepoCommand => _openRepoCommand ??= new RelayCommand(OnOpenRepo);
 
         public SettingsViewModel(IOptions<AppConfig> appConfig, IThemeSelectorService themeSelectorService, ISystemService systemService, IApplicationInfoService applicationInfoService)
         {
@@ -61,7 +63,8 @@ namespace FoxyMonitor.ViewModels
             _themeSelectorService.SetTheme(theme);
         }
 
-        private void OnPrivacyStatement()
-            => _systemService.OpenInWebBrowser(_appConfig.PrivacyStatement);
+        private void OnOpenLicense() => _systemService.OpenInWebBrowser(_appConfig.LicenseUrl);
+
+        private void OnOpenRepo() => _systemService.OpenInWebBrowser(_appConfig.RepoUrl);
     }
 }

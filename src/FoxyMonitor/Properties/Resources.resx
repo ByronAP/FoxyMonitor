@@ -123,11 +123,11 @@
   <data name="SettingsPageTitle" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="SettingsPageAboutText" xml:space="preserve">
-    <value>Settings page placeholder text.  Your app description goes here.</value>
+  <data name="SettingsPageAboutFoxyDisclamerText" xml:space="preserve">
+    <value>FoxyPool Name and Logo used with permission</value>
   </data>
   <data name="SettingsPageAboutTitle" xml:space="preserve">
-    <value>About this application</value>
+    <value>About FoxyMonitor</value>
   </data>
   <data name="SettingsPageChooseThemeText" xml:space="preserve">
     <value>Choose Theme</value>
@@ -135,8 +135,8 @@
   <data name="SettingsPagePersonalizationTitle" xml:space="preserve">
     <value>Personalization</value>
   </data>
-  <data name="SettingsPagePrivacyStatementText" xml:space="preserve">
-    <value>Privacy Statement</value>
+  <data name="SettingsPageAboutLicenseText" xml:space="preserve">
+    <value>Distributed under the MIT open source license</value>
   </data>
   <data name="SettingsPageRadioButtonDarkTheme" xml:space="preserve">
     <value>Dark</value>
@@ -163,9 +163,6 @@
     <value>Sample Orders</value>
   </data>
   <data name="ShellMainPage" xml:space="preserve">
-    <value>Main</value>
-  </data>
-  <data name="MainPageTitle" xml:space="preserve">
     <value>Main</value>
   </data>
   <data name="ShellGoBackButton" xml:space="preserve">
@@ -204,5 +201,8 @@
   </data>
   <data name="ShellEditAccountsPage" xml:space="preserve">
     <value>Edit Accounts</value>
+  </data>
+  <data name="SettingsPageAboutCopyrightText" xml:space="preserve">
+    <value>© 2021 ByronAP, (Source GitHub Repository)</value>
   </data>
 </root>

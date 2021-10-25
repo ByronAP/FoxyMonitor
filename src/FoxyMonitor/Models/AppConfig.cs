@@ -10,6 +10,8 @@
 
         public string AppPropertiesFileName { get; set; }
 
-        public string PrivacyStatement { get; set; }
+        public string LicenseUrl { get; set; }
+
+        public string RepoUrl { get; set; }
     }
 }
