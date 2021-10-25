@@ -1,4 +1,5 @@
-﻿using Windows.UI.Notifications;
+﻿using FoxyMonitor.Models;
+using Windows.UI.Notifications;
 
 namespace FoxyMonitor.Contracts.Services
 {
@@ -6,6 +7,6 @@ namespace FoxyMonitor.Contracts.Services
     {
         public abstract void ShowToastNotification(ToastNotification toastNotification);
 
-        public abstract void ShowToastNotificationSample();
+        public abstract void ShowToastNotification(string tag, string title, string body, ToastAction action, params string[] args);
     }
 }

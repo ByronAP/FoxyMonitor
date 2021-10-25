@@ -21,16 +21,18 @@ namespace FoxyMonitor.Services
         private readonly ILogger<AccountUpdaterService> _logger;
         private readonly SemaphoreSlim _semaphore;
         private readonly IPostChainExplorerService _postChainExplorerService;
+        private readonly IToastNotificationsService _notificationsService;
         private Timer _timer;
         private int _executionCount;
         private TimeSpan _interval;
 
-        public AccountUpdaterService(IApplicationPropertiesService appPropertiesService, AppDbContext appDbContext, ILogger<AccountUpdaterService> logger, IPostChainExplorerService postChainExplorerService)
+        public AccountUpdaterService(IApplicationPropertiesService appPropertiesService, AppDbContext appDbContext, ILogger<AccountUpdaterService> logger, IPostChainExplorerService postChainExplorerService, IToastNotificationsService toastNotificationsService)
         {
             _appPropertiesService = (ApplicationPropertiesService)appPropertiesService;
             _appDbContext = appDbContext;
             _logger = logger;
             _postChainExplorerService = postChainExplorerService;
+            _notificationsService = toastNotificationsService;
             _semaphore = new SemaphoreSlim(1);
 
             if (appPropertiesService.Contains(AccountsUpdateIntervalPropertyKeyName))
@@ -130,7 +132,8 @@ namespace FoxyMonitor.Services
 
                                         App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
 
-                                        //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
+                                        var toastTag = $"{newAlert.AlertType}-{newAlert.AccountId}";
+                                        _notificationsService.ShowToastNotification(toastTag, newAlert.Title, newAlert.Message, ToastAction.ShowAccount, newAlert.AccountId.ToString());
                                     }
 
                                     account.PoolPubKey = accountData.PoolPublicKey;
@@ -153,8 +156,8 @@ namespace FoxyMonitor.Services
 
                                         App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
 
-                                        //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
-
+                                        var toastTag = $"{newAlert.AlertType}-{newAlert.AccountId}";
+                                        _notificationsService.ShowToastNotification(toastTag, newAlert.Title, newAlert.Message, ToastAction.ShowAccount, newAlert.AccountId.ToString());
                                     }
 
                                     account.PayoutAddress = accountData.PayoutAddress;
@@ -198,7 +201,8 @@ namespace FoxyMonitor.Services
 
                                             App.Current.Dispatcher.Invoke(() => _appDbContext.Alerts.Add(newAlert));
 
-                                            //ToastNotification.ShowToast(newAlert.Title, newAlert.Message, "account", Microsoft.Toolkit.Uwp.Notifications.ToastScenario.Alarm, new System.Collections.Generic.KeyValuePair<string, string>("accountid", account.Id.ToString()));
+                                            var toastTag = $"{newAlert.AlertType}-{newAlert.AccountId}";
+                                            _notificationsService.ShowToastNotification(toastTag, newAlert.Title, newAlert.Message, ToastAction.ShowAccount, newAlert.AccountId.ToString());
                                         }
                                     }
                                 }
