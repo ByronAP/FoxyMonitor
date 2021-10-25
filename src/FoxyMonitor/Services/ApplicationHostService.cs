@@ -64,7 +64,6 @@ namespace FoxyMonitor.Services
         {
             if (!_isInitialized)
             {
-                _toastNotificationsService.ShowToastNotificationSample();
                 await Task.CompletedTask;
             }
         }
